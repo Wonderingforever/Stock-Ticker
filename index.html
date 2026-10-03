@@ -1,188 +1,853 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Koyfin-Style Dashboard</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-         background: #f0f0f0; color: #333; padding: 1rem; min-height: 100vh; }
-  .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 1600px; margin: 0 auto; }
-  .panel { background: #fff; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
-  .panel-header { background: #2c3e50; color: #fff; padding: 0.6rem 1rem; font-weight: 600; font-size: 0.95rem; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th { text-align: left; padding: 0.5rem 0.75rem; background: #f5f6f7; color: #666;
-       font-weight: 600; border-bottom: 1px solid #ddd; position: sticky; top: 0; }
-  td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #eee; }
-  tr.group-header td { background: #fafafa; font-weight: 600; color: #444;
-                        font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; }
-  .num { text-align: right; font-variant-numeric: tabular-nums; }
-  .up { color: #16a34a; } .down { color: #dc2626; } .neutral { color: #333; }
-  .ticker { font-weight: 700; color: #1a56db; white-space: nowrap; }
-  .name { color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-          max-width: 220px; }
-  #updated { text-align: center; color: #888; font-size: 0.75rem; margin-top: 0.75rem; }
-  @media (max-width: 900px) { .dashboard { grid-template-columns: 1fr; } }
-</style>
-</head>
-<body>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Markets Dashboard</title>
 
-<div class="dashboard">
-  <!-- ======== PANEL A: ASSET MANAGEMENT ======== -->
-  <div class="panel">
-    <div class="panel-header">Asset Management</div>
-    <table>
-      <thead><tr><th>Ticker</th><th>Name</th><th class="num">1D %</th></tr></thead>
-      <tbody id="stocks"></tbody>
-    </table>
-  </div>
-
-  <!-- ======== PANEL B: MARKET INFO + LEVERAGED ETFS ======== -->
-  <div class="panel">
-    <div class="panel-header">Market Overview</div>
-    <table>
-      <thead><tr><th>Ticker</th><th>Name</th><th class="num">Price</th><th class="num">1D %</th></tr></thead>
-      <tbody id="macro"></tbody>
-    </table>
-  </div>
-</div>
-<div id="updated"></div>
-
-<script>
-// ---------- CONFIG ----------
-const FINNHUB_KEY = "db07ue9r01qn6m7vtdugdb07ue9r01qn6m7vtdv0";
-
-// ================= EDIT YOUR LIST HERE =================
-const GROUPS = [
-  { name: "Financials", symbols: [
-    { t: "TFC", n: "Truist Financial" }, { t: "JPM", n: "JPMorgan Chase" },
-    { t: "WT",  n: "WisdomTree" },       { t: "IVZ", n: "Invesco" },
-    { t: "BRK-B", n: "Berkshire Hathaway" },
-  ]},
-  { name: "Stocks", symbols: [
-    { t: "AMZN", n: "Amazon" }, { t: "MU", n: "Micron" },
-    { t: "SPCX", n: "Tema Space (SPCX)" }, { t: "NVDA", n: "NVIDIA" },
-    { t: "PSA", n: "Public Storage" }, { t: "TSLA", n: "Tesla" },
-    { t: "PYPL", n: "PayPal" }, { t: "COIN", n: "Coinbase" },
-    { t: "META", n: "Meta Platforms" }, { t: "AVGO", n: "Broadcom" },
-    { t: "MSFT", n: "Microsoft" }, { t: "GOOGL", n: "Alphabet" },
-    { t: "AAPL", n: "Apple" },
-  ]},
-  { name: "Precious Metals", symbols: [
-    { t: "SI=F", n: "Silver Futures" }, { t: "CPER", n: "US Copper Index Fund" },
-    { t: "GC=F", n: "Gold Futures" },
-  ]},
-  { name: "Market Information", symbols: [
-    { t: "^VIX", n: "CBOE SPX Volatility" }, { t: "^TNX", n: "US 10Y Yield" },
-    { t: "^IRX", n: "US 13-Week Bill (2Y proxy)" }, { t: "DX-Y.NYY", n: "US Dollar Index" },
-  ]},
-  { name: "Leveraged ETFs", symbols: [
-    { t: "TQQQ", n: "UltraPro QQQ 3X" }, { t: "SOXL", n: "Semis Bull 3X" },
-    { t: "FNGU", n: "FANG+ 3X" }, { t: "NVDL", n: "NVIDIA 2X" },
-    { t: "FAS", n: "Financials Bull 3X" }, { t: "NAIL", n: "Homebuilders Bull 3X" },
-    { t: "YINN", n: "China Bull 3X" }, { t: "WANT", n: "?? — verify this ticker" },
-    { t: "RETL", n: "Retail Bull 3X" },
-  ]},
-  { name: "Indices", symbols: [
-    { t: "SPY", n: "S&P 500 ETF" }, { t: "QQQ", n: "Nasdaq 100 ETF" },
-    { t: "IAI", n: "US Aerospace & Defense" }, { t: "XLI", n: "Industrials" },
-    { t: "VTI", n: "Total Market ETF" }, { t: "VONG", n: "Russell 1000 Growth" },
-  ]},
-  { name: "World Markets", symbols: [
-    { t: "^N225", n: "Nikkei 225" }, { t: "MCHI", n: "China MSCI ETF" },
-    { t: "^HSI", n: "Hang Seng" }, { t: "^FTSE", n: "FTSE 100" },
-    { t: "^GDAXI", n: "DAX" }, { t: "VGK", n: "Europe ETF" },
-  ]},
-  { name: "Crypto", symbols: [
-    { t: "BTC-USD", n: "Bitcoin" }, { t: "ETH-USD", n: "Ethereum" },
-    { t: "SOL-USD", n: "Solana" }, { t: "XRP-USD", n: "XRP" },
-    { t: "DOGE-USD", n: "Dogecoin" },
-  ]},
-];
-// ========================================================
- 
-// ---------- HELPERS ----------
-const esc = s => String(s).replace(/[&<>"']/g, m =>
-  ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" })[m]);
-
-function pctClass(v) { return v > 0 ? "up" : v < 0 ? "down" : "neutral"; }
-function pctHTML(v)  { return `<td class="num ${pctClass(v)}">${v >= 0 ? "+" : ""}${v.toFixed(2)}%</td>`; }
-
-async function fetchJSON(url) {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  return r.json();
-}
-
-// Finnhub: previous close -> current quote
-async function finnhubQuote(sym) {
-  const d = await fetchJSON(
-    `https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(sym)}&token=${FINNHUB_KEY}`);
-  if (!d || !d.c) throw new Error("no data");
-  return { price: d.c, chgPct: d.dp };
-}
-
-// Stooq CSV: "Date,Open,High,Low,Close,Volume"
-async function stooqQuote(sym) {
-  const url = `https://stooq.com/q/l/?s=${sym}&f=sd2t2ohlcv&h&e=csv`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  const csv = await r.text();
-  const rows = csv.trim().split("\n").map(l => l.split(","));
-  if (rows.length < 2) throw new Error("empty");
-  const close = parseFloat(rows[1][4]); // Close
-  const open  = parseFloat(rows[1][2]); // Open (for 1D change approx)
-  if (isNaN(close)) throw new Error("no data");
-  return { price: close, chgPct: open ? ((close - open) / open) * 100 : null };
-}
-
-// ---------- RENDERERS ----------
-function renderStockGroups(target, groups, useStooq) {
-  const el = document.getElementById(target);
-  for (const g of groups) {
-    el.insertAdjacentHTML("beforeend",
-      `<tr class="group-header"><td colspan="4">${esc(g.name)}</td></tr>`);
-    for (const item of g.symbols) {
-      (async () => {
-        let price, chgPct;
-        try {
-          const q = useStooq && item.s
-            ? await stooqQuote(item.s)
-            : await finnhubQuote(item.t);
-          price = q.price; chgPct = q.chgPct;
-        } catch (e) {
-          el.insertAdjacentHTML("beforeend",
-            `<tr><td class="ticker">${esc(item.t)}</td><td class="name">${esc(item.n)}</td><td colspan="3" style="color:#999;font-size:.75rem">${esc(e.message)}</td></tr>`);
-          return;
-        }
-        const fmt = item.fmt || (v => v.toFixed(2));
-        const priceCell = chgPct === null ? "" : pctHTML(chgPct);
-        el.insertAdjacentHTML("beforeend", `
-          <tr>
-            <td class="ticker">${esc(item.t)}</td>
-            <td class="name">${esc(item.n)}</td>
-            <td class="num neutral">${fmt(price)}</td>
-            ${priceCell || "<td class='num' style='color:#999'>—</td>"}
-          </tr>`);
-      })();
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-  }
-}
 
-renderStockGroups("stocks", STOCK_GROUPS, false);
-renderStockGroups("macro",  MACRO_GROUPS.map(g =>
-  g.stooq ? { ...g, symbols: g.symbols } : g), true);
+    body {
+      min-height: 100vh;
+      padding: 16px;
+      background: #f0f0f0;
+      color: #333;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    }
 
-document.getElementById("updated").textContent =
-  `Loading… auto-refreshes every 60s`;
+    .dashboard {
+      width: 100%;
+      max-width: 1900px;
+      margin: 0 auto;
+    }
 
-setInterval(() => {
-  document.getElementById("stocks").innerHTML = "";
-  document.getElementById("macro").innerHTML = "";
-  renderStockGroups("stocks", STOCK_GROUPS, false);
-  renderStockGroups("macro",  MACRO_GROUPS, true);
-}, 60000);
-</script>
+    .panel {
+      overflow-x: auto;
+      background: #fff;
+      border-radius: 7px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    }
+
+    .panel-header {
+      padding: 11px 15px;
+      background: #2c3e50;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1100px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 9px 10px;
+      background: #f5f6f7;
+      color: #666;
+      border-bottom: 1px solid #d8d8d8;
+      text-align: left;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #eeeeee;
+    }
+
+    tbody tr:not(.group-header):hover {
+      background: #f9fafb;
+    }
+
+    .group-header td {
+      padding: 7px 10px;
+      background: #e9ecef;
+      color: #444;
+      border-top: 1px solid #d5d5d5;
+      border-bottom: 1px solid #d5d5d5;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .ticker {
+      width: 85px;
+      color: #1a56db;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .name {
+      min-width: 210px;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .num {
+      min-width: 80px;
+      text-align: right;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .up {
+      color: #159447;
+      font-weight: 600;
+    }
+
+    .down {
+      color: #d32f2f;
+      font-weight: 600;
+    }
+
+    .neutral {
+      color: #444;
+    }
+
+    .loading {
+      color: #aaa;
+    }
+
+    .error {
+      color: #999;
+    }
+
+    #status {
+      max-width: 1900px;
+      margin: 8px auto 0;
+      color: #777;
+      font-size: 12px;
+      text-align: right;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 5px;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      td,
+      thead th {
+        padding: 6px 7px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard">
+    <div class="panel">
+      <div class="panel-header">Financial Markets Dashboard</div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Name</th>
+            <th class="num">Price</th>
+            <th class="num">1D</th>
+            <th class="num">1W</th>
+            <th class="num">1M</th>
+            <th class="num">3M</th>
+            <th class="num">6M</th>
+            <th class="num">YTD</th>
+            <th class="num">1Y</th>
+          </tr>
+        </thead>
+
+        <tbody id="market-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="status">Loading...</div>
+
+  <script>
+    /* =====================================================
+       API KEY
+       ===================================================== */
+
+    const FINNHUB_KEY = "YOUR_NEW_FINNHUB_KEY";
+
+
+    /* =====================================================
+       DASHBOARD SECURITIES
+       ===================================================== */
+
+    const GROUPS = [
+      {
+        name: "Financials",
+        symbols: [
+          { ticker: "TFC", api: "TFC", name: "Truist Financial" },
+          { ticker: "JPM", api: "JPM", name: "JPMorgan Chase" },
+          { ticker: "WT", api: "WT", name: "WisdomTree" },
+          { ticker: "IVZ", api: "IVZ", name: "Invesco" },
+          { ticker: "BRK.B", api: "BRK.B", name: "Berkshire Hathaway" }
+        ]
+      },
+
+      {
+        name: "Stocks",
+        symbols: [
+          { ticker: "AMZN", api: "AMZN", name: "Amazon" },
+          { ticker: "MU", api: "MU", name: "Micron Technology" },
+          { ticker: "SPCX", api: "SPCX", name: "Tema Space ETF" },
+          { ticker: "NVDA", api: "NVDA", name: "NVIDIA" },
+          { ticker: "PSA", api: "PSA", name: "Public Storage" },
+          { ticker: "TSLA", api: "TSLA", name: "Tesla" },
+          { ticker: "PYPL", api: "PYPL", name: "PayPal" },
+          { ticker: "COIN", api: "COIN", name: "Coinbase" },
+          { ticker: "META", api: "META", name: "Meta Platforms" },
+          { ticker: "AVGO", api: "AVGO", name: "Broadcom" },
+          { ticker: "MSFT", api: "MSFT", name: "Microsoft" },
+          { ticker: "GOOGL", api: "GOOGL", name: "Alphabet" },
+          { ticker: "AAPL", api: "AAPL", name: "Apple" }
+        ]
+      },
+
+      {
+        name: "Precious Metals & Commodities",
+        symbols: [
+          { ticker: "CPER", api: "CPER", name: "United States Copper Index Fund" },
+          { ticker: "GLD", api: "GLD", name: "SPDR Gold Shares" },
+          { ticker: "SLV", api: "SLV", name: "iShares Silver Trust" }
+        ]
+      },
+
+      {
+        name: "Leveraged ETFs",
+        symbols: [
+          { ticker: "TQQQ", api: "TQQQ", name: "ProShares UltraPro QQQ 3X" },
+          { ticker: "SOXL", api: "SOXL", name: "Semiconductor Bull 3X" },
+          { ticker: "FNGU", api: "FNGU", name: "MicroSectors FANG+ 3X" },
+          { ticker: "NVDL", api: "NVDL", name: "NVIDIA 2X" },
+          { ticker: "FAS", api: "FAS", name: "Financial Bull 3X" },
+          { ticker: "NAIL", api: "NAIL", name: "Homebuilders Bull 3X" },
+          { ticker: "YINN", api: "YINN", name: "China Bull 3X" },
+          { ticker: "WANT", api: "WANT", name: "Consumer Discretionary Bull 3X" },
+          { ticker: "RETL", api: "RETL", name: "Retail Bull 3X" }
+        ]
+      },
+
+      {
+        name: "U.S. Market ETFs",
+        symbols: [
+          { ticker: "SPY", api: "SPY", name: "S&P 500 ETF" },
+          { ticker: "QQQ", api: "QQQ", name: "Nasdaq-100 ETF" },
+          { ticker: "ITA", api: "ITA", name: "U.S. Aerospace & Defense ETF" },
+          { ticker: "XLI", api: "XLI", name: "Industrial Select Sector SPDR" },
+          { ticker: "VTI", api: "VTI", name: "Vanguard Total Stock Market ETF" },
+          { ticker: "VONG", api: "VONG", name: "Russell 1000 Growth ETF" }
+        ]
+      },
+
+      {
+        name: "World Markets",
+        symbols: [
+          { ticker: "MCHI", api: "MCHI", name: "iShares MSCI China ETF" },
+          { ticker: "VGK", api: "VGK", name: "Vanguard FTSE Europe ETF" },
+          { ticker: "EWJ", api: "EWJ", name: "iShares MSCI Japan ETF" },
+          { ticker: "EWU", api: "EWU", name: "iShares MSCI United Kingdom ETF" },
+          { ticker: "EWG", api: "EWG", name: "iShares MSCI Germany ETF" },
+          { ticker: "EWH", api: "EWH", name: "iShares MSCI Hong Kong ETF" }
+        ]
+      }
+    ];
+
+
+    /* =====================================================
+       BASIC HELPERS
+       ===================================================== */
+
+    function safeID(value) {
+      return value.replace(/[^a-zA-Z0-9]/g, "-");
+    }
+
+    function rowID(ticker) {
+      return "row-" + safeID(ticker);
+    }
+
+    function escapeHTML(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function formatPrice(value) {
+      if (
+        value === null ||
+        value === undefined ||
+        Number.isNaN(value)
+      ) {
+        return "—";
+      }
+
+      if (value >= 1000) {
+        return value.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      return value.toFixed(2);
+    }
+
+    function percentChange(current, startingPrice) {
+      if (
+        current === null ||
+        startingPrice === null ||
+        startingPrice === undefined ||
+        startingPrice === 0
+      ) {
+        return null;
+      }
+
+      return ((current / startingPrice) - 1) * 100;
+    }
+
+    function pctClass(value) {
+      if (
+        value === null ||
+        Number.isNaN(value)
+      ) {
+        return "neutral";
+      }
+
+      if (value > 0) {
+        return "up";
+      }
+
+      if (value < 0) {
+        return "down";
+      }
+
+      return "neutral";
+    }
+
+    function formatPct(value) {
+      if (
+        value === null ||
+        value === undefined ||
+        Number.isNaN(value)
+      ) {
+        return "—";
+      }
+
+      const sign = value > 0 ? "+" : "";
+
+      return sign + value.toFixed(2) + "%";
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+
+    /* =====================================================
+       DATES
+       ===================================================== */
+
+    function unix(date) {
+      return Math.floor(date.getTime() / 1000);
+    }
+
+    function daysAgo(days) {
+      const date = new Date();
+      date.setDate(date.getDate() - days);
+      return date;
+    }
+
+    function monthsAgo(months) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - months);
+      return date;
+    }
+
+    function yearsAgo(years) {
+      const date = new Date();
+      date.setFullYear(date.getFullYear() - years);
+      return date;
+    }
+
+    function endOfPreviousYear() {
+      const now = new Date();
+
+      return new Date(
+        now.getFullYear() - 1,
+        11,
+        31,
+        23,
+        59,
+        59
+      );
+    }
+
+
+    /* =====================================================
+       FINNHUB REQUESTS
+       ===================================================== */
+
+    async function fetchJSON(url) {
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+
+      return response.json();
+    }
+
+    async function getQuote(symbol) {
+      const url =
+        "https://finnhub.io/api/v1/quote" +
+        "?symbol=" + encodeURIComponent(symbol) +
+        "&token=" + encodeURIComponent(FINNHUB_KEY);
+
+      const data = await fetchJSON(url);
+
+      if (
+        !data ||
+        data.c === undefined ||
+        data.c === null ||
+        data.c === 0
+      ) {
+        throw new Error("No current quote");
+      }
+
+      return {
+        current: Number(data.c),
+        previousClose: data.pc ? Number(data.pc) : null,
+        dailyPct:
+          data.dp !== undefined
+            ? Number(data.dp)
+            : null
+      };
+    }
+
+    async function getHistory(symbol) {
+      const to = new Date();
+      const from = new Date();
+
+      from.setMonth(from.getMonth() - 14);
+
+      const url =
+        "https://finnhub.io/api/v1/stock/candle" +
+        "?symbol=" + encodeURIComponent(symbol) +
+        "&resolution=D" +
+        "&from=" + unix(from) +
+        "&to=" + unix(to) +
+        "&token=" + encodeURIComponent(FINNHUB_KEY);
+
+      const data = await fetchJSON(url);
+
+      if (
+        !data ||
+        data.s !== "ok" ||
+        !Array.isArray(data.t) ||
+        !Array.isArray(data.c) ||
+        data.t.length === 0
+      ) {
+        throw new Error("Historical data unavailable");
+      }
+
+      const history = data.t.map((timestamp, index) => ({
+        date: new Date(timestamp * 1000),
+        close: Number(data.c[index])
+      }));
+
+      history.sort((a, b) => a.date - b.date);
+
+      return history;
+    }
+
+
+    /* =====================================================
+       HISTORICAL PRICE LOOKUP
+       ===================================================== */
+
+    function closeOnOrBefore(history, targetDate) {
+      const target = targetDate.getTime();
+
+      for (let i = history.length - 1; i >= 0; i--) {
+        if (history[i].date.getTime() <= target) {
+          return history[i].close;
+        }
+      }
+
+      return null;
+    }
+
+
+    /* =====================================================
+       PERFORMANCE CALCULATION
+       ===================================================== */
+
+    function calculatePerformance(quote, history) {
+      const current = quote.current;
+
+      const weekPrice =
+        closeOnOrBefore(history, daysAgo(7));
+
+      const monthPrice =
+        closeOnOrBefore(history, monthsAgo(1));
+
+      const threeMonthPrice =
+        closeOnOrBefore(history, monthsAgo(3));
+
+      const sixMonthPrice =
+        closeOnOrBefore(history, monthsAgo(6));
+
+      const oneYearPrice =
+        closeOnOrBefore(history, yearsAgo(1));
+
+      const yearEndPrice =
+        closeOnOrBefore(history, endOfPreviousYear());
+
+      return {
+        day:
+          quote.dailyPct !== null
+            ? quote.dailyPct
+            : percentChange(
+                current,
+                quote.previousClose
+              ),
+
+        week:
+          percentChange(
+            current,
+            weekPrice
+          ),
+
+        month:
+          percentChange(
+            current,
+            monthPrice
+          ),
+
+        threeMonth:
+          percentChange(
+            current,
+            threeMonthPrice
+          ),
+
+        sixMonth:
+          percentChange(
+            current,
+            sixMonthPrice
+          ),
+
+        ytd:
+          percentChange(
+            current,
+            yearEndPrice
+          ),
+
+        year:
+          percentChange(
+            current,
+            oneYearPrice
+          )
+      };
+    }
+
+
+    /* =====================================================
+       BUILD TABLE
+       ===================================================== */
+
+    function createTable() {
+      const tbody =
+        document.getElementById("market-table");
+
+      tbody.innerHTML = "";
+
+      for (const group of GROUPS) {
+        tbody.insertAdjacentHTML(
+          "beforeend",
+          `
+          <tr class="group-header">
+            <td colspan="10">
+              ${escapeHTML(group.name)}
+            </td>
+          </tr>
+          `
+        );
+
+        for (const stock of group.symbols) {
+          tbody.insertAdjacentHTML(
+            "beforeend",
+            `
+            <tr id="${rowID(stock.ticker)}">
+              <td class="ticker">
+                ${escapeHTML(stock.ticker)}
+              </td>
+
+              <td class="name">
+                ${escapeHTML(stock.name)}
+              </td>
+
+              <td class="num price loading">—</td>
+              <td class="num d1 loading">—</td>
+              <td class="num w1 loading">—</td>
+              <td class="num m1 loading">—</td>
+              <td class="num m3 loading">—</td>
+              <td class="num m6 loading">—</td>
+              <td class="num ytd loading">—</td>
+              <td class="num y1 loading">—</td>
+            </tr>
+            `
+          );
+        }
+      }
+    }
+
+
+    /* =====================================================
+       UPDATE CELLS
+       ===================================================== */
+
+    function setPercentCell(row, selector, value) {
+      const cell = row.querySelector(selector);
+
+      if (!cell) {
+        return;
+      }
+
+      cell.className =
+        "num " + pctClass(value);
+
+      cell.textContent =
+        formatPct(value);
+    }
+
+    function updateRow(stock, quote, returns) {
+      const row =
+        document.getElementById(
+          rowID(stock.ticker)
+        );
+
+      if (!row) {
+        return;
+      }
+
+      const priceCell =
+        row.querySelector(".price");
+
+      priceCell.className =
+        "num neutral";
+
+      priceCell.textContent =
+        formatPrice(quote.current);
+
+      setPercentCell(
+        row,
+        ".d1",
+        returns.day
+      );
+
+      setPercentCell(
+        row,
+        ".w1",
+        returns.week
+      );
+
+      setPercentCell(
+        row,
+        ".m1",
+        returns.month
+      );
+
+      setPercentCell(
+        row,
+        ".m3",
+        returns.threeMonth
+      );
+
+      setPercentCell(
+        row,
+        ".m6",
+        returns.sixMonth
+      );
+
+      setPercentCell(
+        row,
+        ".ytd",
+        returns.ytd
+      );
+
+      setPercentCell(
+        row,
+        ".y1",
+        returns.year
+      );
+    }
+
+    function showRowError(stock, message) {
+      const row =
+        document.getElementById(
+          rowID(stock.ticker)
+        );
+
+      if (!row) {
+        return;
+      }
+
+      const cells =
+        row.querySelectorAll(
+          ".price, .d1, .w1, .m1, .m3, .m6, .ytd, .y1"
+        );
+
+      cells.forEach(cell => {
+        cell.textContent = "—";
+        cell.classList.remove("loading");
+        cell.classList.add("error");
+      });
+
+      row.title = message;
+    }
+
+
+    /* =====================================================
+       LOAD INDIVIDUAL SECURITY
+       ===================================================== */
+
+    async function loadSecurity(stock) {
+      try {
+        const [quote, history] =
+          await Promise.all([
+            getQuote(stock.api),
+            getHistory(stock.api)
+          ]);
+
+        const returns =
+          calculatePerformance(
+            quote,
+            history
+          );
+
+        updateRow(
+          stock,
+          quote,
+          returns
+        );
+      }
+
+      catch (error) {
+        console.error(
+          stock.ticker,
+          error
+        );
+
+        showRowError(
+          stock,
+          error.message
+        );
+      }
+    }
+
+
+    /* =====================================================
+       LOAD FULL DASHBOARD
+       ===================================================== */
+
+    async function loadDashboard() {
+      createTable();
+
+      const status =
+        document.getElementById("status");
+
+      const securities =
+        GROUPS.flatMap(
+          group => group.symbols
+        );
+
+      const total =
+        securities.length;
+
+      let completed =
+        0;
+
+      const BATCH_SIZE =
+        3;
+
+      for (
+        let i = 0;
+        i < securities.length;
+        i += BATCH_SIZE
+      ) {
+        const batch =
+          securities.slice(
+            i,
+            i + BATCH_SIZE
+          );
+
+        await Promise.allSettled(
+          batch.map(
+            async stock => {
+              await loadSecurity(stock);
+
+              completed++;
+
+              status.textContent =
+                "Loading " +
+                completed +
+                " of " +
+                total +
+                "...";
+            }
+          )
+        );
+
+        await sleep(1200);
+      }
+
+      const now =
+        new Date();
+
+      status.textContent =
+        "Last updated: " +
+        now.toLocaleString();
+    }
+
+
+    /* =====================================================
+       START
+       ===================================================== */
+
+    if (
+      FINNHUB_KEY ===
+      "YOUR_NEW_FINNHUB_KEY"
+    ) {
+      document.getElementById(
+        "status"
+      ).textContent =
+        "Add your Finnhub API key in the FINNHUB_KEY setting.";
+
+      createTable();
+    }
+
+    else {
+      loadDashboard();
+    }
+  </script>
 </body>
 </html>
