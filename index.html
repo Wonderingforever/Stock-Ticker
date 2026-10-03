@@ -53,42 +53,55 @@
 // ---------- CONFIG ----------
 const FINNHUB_KEY = "db07ue9r01qn6m7vtdugdb07ue9r01qn6m7vtdv0";
 
-const STOCK_GROUPS = [
-  { name: "Group 1", symbols: [
-    { t: "BLK",  n: "BlackRock" },
-    { t: "BX",   n: "Blackstone" },
-    { t: "BNY",  n: "Bank of NY Mellon" },
-    { t: "KKR",  n: "KKR & Co." },
-    { t: "APO",  n: "Apollo Global" },
-    { t: "STT",  n: "State Street" },
-    { t: "TROW", n: "T. Rowe Price" },
-    { t: "BEN",  n: "Franklin Templeton" },
-    { t: "SCHW", n: "Charles Schwab" },
-    { t: "TFC",  n: "Truist Financial" },
-    { t: "JPM",  n: "JPMorgan Chase" },
-    { t: "WT",   n: "WisdomTree" },
-    { t: "IVZ",  n: "Invesco" },
+// ================= EDIT YOUR LIST HERE =================
+const GROUPS = [
+  { name: "Financials", symbols: [
+    { t: "TFC", n: "Truist Financial" }, { t: "JPM", n: "JPMorgan Chase" },
+    { t: "WT",  n: "WisdomTree" },       { t: "IVZ", n: "Invesco" },
+    { t: "BRK-B", n: "Berkshire Hathaway" },
   ]},
-];
-
-// Macro via Stooq (indices, yields, FX — no API key, CORS-friendly)
-const MACRO_GROUPS = [
-  { name: "Market Information", stooq: true, symbols: [
-    { t: "^VIX",  s: "^vix",  n: "CBOE SPX Volatility Index", fmt: v => v.toFixed(2) },
-    { t: "US10Y", s: "10usy.b", n: "US 10Y Treasury Yield",   fmt: v => v.toFixed(3) + "%" },
-    { t: "US2Y",  s: "2usy.b",  n: "US 2Y Treasury Yield",     fmt: v => v.toFixed(3) + "%" },
-    { t: "DXY",   s: "^dxy",   n: "US Dollar Index",          fmt: v => v.toFixed(2) },
+  { name: "Stocks", symbols: [
+    { t: "AMZN", n: "Amazon" }, { t: "MU", n: "Micron" },
+    { t: "SPCX", n: "Tema Space (SPCX)" }, { t: "NVDA", n: "NVIDIA" },
+    { t: "PSA", n: "Public Storage" }, { t: "TSLA", n: "Tesla" },
+    { t: "PYPL", n: "PayPal" }, { t: "COIN", n: "Coinbase" },
+    { t: "META", n: "Meta Platforms" }, { t: "AVGO", n: "Broadcom" },
+    { t: "MSFT", n: "Microsoft" }, { t: "GOOGL", n: "Alphabet" },
+    { t: "AAPL", n: "Apple" },
   ]},
-  // Leveraged ETFs via Finnhub
+  { name: "Precious Metals", symbols: [
+    { t: "SI=F", n: "Silver Futures" }, { t: "CPER", n: "US Copper Index Fund" },
+    { t: "GC=F", n: "Gold Futures" },
+  ]},
+  { name: "Market Information", symbols: [
+    { t: "^VIX", n: "CBOE SPX Volatility" }, { t: "^TNX", n: "US 10Y Yield" },
+    { t: "^IRX", n: "US 13-Week Bill (2Y proxy)" }, { t: "DX-Y.NYY", n: "US Dollar Index" },
+  ]},
   { name: "Leveraged ETFs", symbols: [
-    { t: "TQQQ", n: "ProShares UltraPro QQQ" },
-    { t: "SOXL", n: "Direxion Semis Bull 3X" },
-    { t: "FNGU", n: "MicroSectors FANG+ 3X" },
-    { t: "NVDL", n: "GraniteShares 2x NVDA" },
-    { t: "FAS",  n: "Direxion Fin Bull 3X" },
+    { t: "TQQQ", n: "UltraPro QQQ 3X" }, { t: "SOXL", n: "Semis Bull 3X" },
+    { t: "FNGU", n: "FANG+ 3X" }, { t: "NVDL", n: "NVIDIA 2X" },
+    { t: "FAS", n: "Financials Bull 3X" }, { t: "NAIL", n: "Homebuilders Bull 3X" },
+    { t: "YINN", n: "China Bull 3X" }, { t: "WANT", n: "?? — verify this ticker" },
+    { t: "RETL", n: "Retail Bull 3X" },
+  ]},
+  { name: "Indices", symbols: [
+    { t: "SPY", n: "S&P 500 ETF" }, { t: "QQQ", n: "Nasdaq 100 ETF" },
+    { t: "IAI", n: "US Aerospace & Defense" }, { t: "XLI", n: "Industrials" },
+    { t: "VTI", n: "Total Market ETF" }, { t: "VONG", n: "Russell 1000 Growth" },
+  ]},
+  { name: "World Markets", symbols: [
+    { t: "^N225", n: "Nikkei 225" }, { t: "MCHI", n: "China MSCI ETF" },
+    { t: "^HSI", n: "Hang Seng" }, { t: "^FTSE", n: "FTSE 100" },
+    { t: "^GDAXI", n: "DAX" }, { t: "VGK", n: "Europe ETF" },
+  ]},
+  { name: "Crypto", symbols: [
+    { t: "BTC-USD", n: "Bitcoin" }, { t: "ETH-USD", n: "Ethereum" },
+    { t: "SOL-USD", n: "Solana" }, { t: "XRP-USD", n: "XRP" },
+    { t: "DOGE-USD", n: "Dogecoin" },
   ]},
 ];
-
+// ========================================================
+ 
 // ---------- HELPERS ----------
 const esc = s => String(s).replace(/[&<>"']/g, m =>
   ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" })[m]);
