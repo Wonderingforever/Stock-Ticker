@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Market Performance Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      color: #000;
+      padding: 6px;
+      font-size: 12px;
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.13fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .section { width: 100%; }
+
+    .section-title {
+      background: #f0f0f0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 3px 2px;
+      border-bottom: 1px solid #d0d0d0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 11px;
+    }
+
+    th {
+      background: #f5f5f5;
+      font-weight: 700;
+      text-align: right;
+      padding: 3px;
+      border-bottom: 1px solid #d8d8d8;
+      white-space: nowrap;
+    }
+
+    th:first-child {
+      text-align: left;
+      width: 70px;
+    }
+
+    td {
+      padding: 3px;
+      border-bottom: 1px solid #f2f2f2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    td:first-child {
+      font-weight: 700;
+      text-align: left;
+      width: 70px;
+      background: #fafafa;
+    }
+
+    .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .positive { background: #b7dfcf; }
+    .negative { background: #ef9a9a; }
+    .neutral  { background: #fff; }
+    .na       { color: #888; background: #fafafa; }
+
+    #status {
+      max-width: 1500px;
+      margin: 8px auto 0;
+      color: #777;
+      font-size: 10px;
+      text-align: right;
+    }
+
+    @media (max-width: 900px) {
+      .dashboard { grid-template-columns: 1fr; }
+      body { padding: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard">
+  <div class="column">
+
+    <div class="section">
+      <div class="section-title">Leveraged ETFs</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th>
+            <th>6 Month</th><th>YTD</th><th>1 year</th>
+          </tr>
+        </thead>
+        <tbody id="leveraged"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">US Market</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th>
+            <th>6 Month</th><th>YTD</th><th>1 year</th>
+          </tr>
+        </thead>
+        <tbody id="us-market"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">World Market</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th>
+            <th>6 Month</th><th>YTD</th><th>1 year</th>
+          </tr>
+        </thead>
+        <tbody id="world-market"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="column">
+
+    <div class="section">
+      <div class="section-title">FINANCIALS</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th>
+            <th>6 Month</th><th>YTD</th><th>1 year</th>
+          </tr>
+        </thead>
+        <tbody id="financials"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Stocks</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th>
+            <th>6 Month</th><th>YTD</th><th>1 year</th>
+          </tr>
+        </thead>
+        <tbody id="stocks"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Precious Metals</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th>
+            <th>6 Month</th><th>YTD</th><th>1 year</th>
+          </tr>
+        </thead>
+        <tbody id="precious"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<div id="status">Loading market data...</div>
+
+<script>
+const SECTION_ORDER = [
+  "leveraged",
+  "us-market",
+  "world-market",
+  "financials",
+  "stocks",
+  "precious"
+];
+
+function formatPct(value) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return "#N/A";
+  }
+  return Number(value).toFixed(2) + "%";
+}
+
+function valueClass(value) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return "na";
+  }
+  if (Number(value) > 0) return "positive";
+  if (Number(value) < 0) return "negative";
+  return "neutral";
+}
+
+function makeCell(value) {
+  const td = document.createElement("td");
+  td.className = "num " + valueClass(value);
+  td.textContent = formatPct(value);
+  return td;
+}
+
+function renderSection(sectionId, rows) {
+  const tbody = document.getElementById(sectionId);
+  tbody.innerHTML = "";
+
+  for (const row of rows || []) {
+    const tr = document.createElement("tr");
+
+    const name = document.createElement("td");
+    name.textContent = row.ticker;
+    tr.appendChild(name);
+
+    tr.appendChild(makeCell(row.day));
+    tr.appendChild(makeCell(row.five_day));
+    tr.appendChild(makeCell(row.one_month));
+    tr.appendChild(makeCell(row.six_month));
+    tr.appendChild(makeCell(row.ytd));
+    tr.appendChild(makeCell(row.one_year));
+
+    tbody.appendChild(tr);
+  }
+}
+
+async function loadDashboard() {
+  const status = document.getElementById("status");
+
+  try {
+    const response = await fetch("./data/market-data.json?ts=" + Date.now(), {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+
+    const data = await response.json();
+
+    for (const sectionId of SECTION_ORDER) {
+      renderSection(sectionId, data.sections?.[sectionId] || []);
+    }
+
+    status.textContent =
+      "Last updated: " +
+      (data.updated_at
+        ? new Date(data.updated_at).toLocaleString()
+        : "unknown");
+  } catch (error) {
+    console.error(error);
+    status.textContent =
+      "Unable to load data/market-data.json. Run the GitHub Action first.";
+  }
+}
+
+loadDashboard();
+</script>
+
+</body>
+</html>
