@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-04T05:18:34.573734+00:00",
+  "updated_at": "2026-10-04T05:20:10.835515+00:00",
   "sections": {
     "leveraged": [
       {
@@ -53,7 +53,7 @@
         "five_day": -3.3212,
         "one_month": -22.166,
         "six_month": 18.8931,
-        "ytd": -15.0515,
+        "ytd": -15.0514,
         "one_year": -12.3976
       },
       {
@@ -146,7 +146,7 @@
         "one_month": -2.7747,
         "six_month": 4.3085,
         "ytd": 10.4345,
-        "one_year": 11.3223
+        "one_year": 11.3222
       },
       {
         "ticker": "VTI",
@@ -302,7 +302,7 @@
         "five_day": -2.4218,
         "one_month": -11.5198,
         "six_month": 3.7965,
-        "ytd": -2.2534,
+        "ytd": -2.2533,
         "one_year": 4.0986
       },
       {
@@ -404,7 +404,7 @@
         "one_month": -3.9301,
         "six_month": 17.1259,
         "ytd": -8.7604,
-        "one_year": -22.9043
+        "one_year": -22.9042
       },
       {
         "ticker": "COIN",
