@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Market Performance Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      color: #000;
+      padding: 6px;
+      font-size: 12px;
+    }
+    .dashboard {
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.13fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .column { display: flex; flex-direction: column; gap: 14px; }
+    .section { width: 100%; }
+    .section-title {
+      background: #f0f0f0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 3px 2px;
+      border-bottom: 1px solid #d0d0d0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 11px;
+    }
+    th {
+      background: #f5f5f5;
+      font-weight: 700;
+      text-align: right;
+      padding: 3px;
+      border-bottom: 1px solid #d8d8d8;
+      white-space: nowrap;
+    }
+    th:first-child { text-align: left; width: 70px; }
+    td {
+      padding: 3px;
+      border-bottom: 1px solid #f2f2f2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    td:first-child {
+      font-weight: 700;
+      text-align: left;
+      width: 70px;
+      background: #fafafa;
+    }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .positive { background: #b7dfcf; }
+    .negative { background: #ef9a9a; }
+    .neutral { background: #fff; }
+    .loading, .error { color: #888; background: #fafafa; }
+    #status {
+      max-width: 1500px;
+      margin: 8px auto 0;
+      color: #777;
+      font-size: 10px;
+      text-align: right;
+    }
+    @media (max-width: 900px) {
+      .dashboard { grid-template-columns: 1fr; }
+      body { padding: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard">
+  <div class="column">
+    <div class="section">
+      <div class="section-title">Leveraged ETFs</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="leveraged"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">US Market</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="us-market"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">World Market</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="world-market"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="column">
+    <div class="section">
+      <div class="section-title">FINANCIALS</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="financials"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Stocks</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="stocks"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Precious Metals</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="precious"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="status">Loading...</div>
+
+<script>
+const FINNHUB_KEY = "YOUR_NEW_FINNHUB_KEY";
+
+const SECTIONS = [
+  {
+    id: "leveraged",
+    symbols: [
+      { ticker: "TQQQ", api: "TQQQ" },
+      { ticker: "SOXL", api: "SOXL" },
+      { ticker: "NAIL", api: "NAIL" },
+      { ticker: "FNGU", api: "FNGU" },
+      { ticker: "NVDL", api: "NVDL" },
+      { ticker: "FAS", api: "FAS" },
+      { ticker: "YINN", api: "YINN" },
+      { ticker: "YANG", api: "YANG" },
+      { ticker: "WANT", api: "WANT" },
+      { ticker: "RETL", api: "RETL" },
+      { ticker: "TSLL", api: "TSLL" },
+      { ticker: "AMDL", api: "AMDL" }
+    ]
+  },
+  {
+    id: "us-market",
+    symbols: [
+      { ticker: "SPY", api: "SPY" },
+      { ticker: "QQQ", api: "QQQ" },
+      { ticker: "ITA", api: "ITA" },
+      { ticker: "XLI", api: "XLI" },
+      { ticker: "VTI", api: "VTI" },
+      { ticker: "VONG", api: "VONG" }
+    ]
+  },
+  {
+    id: "world-market",
+    symbols: [
+      { ticker: "EWJ", api: "EWJ" },
+      { ticker: "MCHI", api: "MCHI" },
+      { ticker: "EWH", api: "EWH" },
+      { ticker: "EWU", api: "EWU" },
+      { ticker: "EWG", api: "EWG" },
+      { ticker: "VGK", api: "VGK" }
+    ]
+  },
+  {
+    id: "financials",
+    symbols: [
+      { ticker: "BLK", api: "BLK" },
+      { ticker: "BX", api: "BX" },
+      { ticker: "BNY", api: "BNY" },
+      { ticker: "KKR", api: "KKR" },
+      { ticker: "APO", api: "APO" },
+      { ticker: "STT", api: "STT" },
+      { ticker: "TROW", api: "TROW" },
+      { ticker: "BEN", api: "BEN" },
+      { ticker: "SCHW", api: "SCHW" },
+      { ticker: "TFC", api: "TFC" },
+      { ticker: "JPM", api: "JPM" },
+      { ticker: "WT", api: "WT" },
+      { ticker: "IVZ", api: "IVZ" }
+    ]
+  },
+  {
+    id: "stocks",
+    symbols: [
+      { ticker: "AMZN", api: "AMZN" },
+      { ticker: "MU", api: "MU" },
+      { ticker: "SPCX", api: "SPCX" },
+      { ticker: "NVDA", api: "NVDA" },
+      { ticker: "PSA", api: "PSA" },
+      { ticker: "TSLA", api: "TSLA" },
+      { ticker: "PYPL", api: "PYPL" },
+      { ticker: "COIN", api: "COIN" },
+      { ticker: "BRK.B", api: "BRK.B" },
+      { ticker: "META", api: "META" },
+      { ticker: "AVGO", api: "AVGO" },
+      { ticker: "MSFT", api: "MSFT" },
+      { ticker: "GOOGL", api: "GOOGL" },
+      { ticker: "AAPL", api: "AAPL" }
+    ]
+  },
+  {
+    id: "precious",
+    symbols: [
+      { ticker: "Silver", api: "SLV" },
+      { ticker: "Gold", api: "GLD" },
+      { ticker: "CPER", api: "CPER" }
+    ]
+  }
+];
+
+function safeID(value) {
+  return value.replace(/[^a-zA-Z0-9]/g, "-");
+}
+function rowID(sectionId, ticker) {
+  return sectionId + "-" + safeID(ticker);
+}
+function unix(date) {
+  return Math.floor(date.getTime() / 1000);
+}
+function daysAgo(days) {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  return d;
+}
+function monthsAgo(months) {
+  const d = new Date();
+  d.setMonth(d.getMonth() - months);
+  return d;
+}
+function yearsAgo(years) {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - years);
+  return d;
+}
+function previousYearEnd() {
+  const now = new Date();
+  return new Date(now.getFullYear() - 1, 11, 31, 23, 59, 59);
+}
+function percentChange(current, oldPrice) {
+  if (current == null || oldPrice == null || oldPrice === 0) return null;
+  return ((current / oldPrice) - 1) * 100;
+}
+function formatPct(value) {
+  if (value == null || Number.isNaN(value)) return "#N/A";
+  return value.toFixed(2) + "%";
+}
+function valueClass(value) {
+  if (value == null || Number.isNaN(value)) return "error";
+  if (value > 0) return "positive";
+  if (value < 0) return "negative";
+  return "neutral";
+}
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function fetchJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("HTTP " + response.status);
+  return response.json();
+}
+
+async function getQuote(symbol) {
+  const url =
+    "https://finnhub.io/api/v1/quote" +
+    "?symbol=" + encodeURIComponent(symbol) +
+    "&token=" + encodeURIComponent(FINNHUB_KEY);
+
+  const data = await fetchJSON(url);
+
+  if (!data || data.c == null || data.c === 0) {
+    throw new Error("No quote");
+  }
+
+  return {
+    current: Number(data.c),
+    previousClose: data.pc != null ? Number(data.pc) : null,
+    dailyPct: data.dp != null ? Number(data.dp) : null
+  };
+}
+
+async function getHistory(symbol) {
+  const to = new Date();
+  const from = new Date();
+  from.setMonth(from.getMonth() - 14);
+
+  const url =
+    "https://finnhub.io/api/v1/stock/candle" +
+    "?symbol=" + encodeURIComponent(symbol) +
+    "&resolution=D" +
+    "&from=" + unix(from) +
+    "&to=" + unix(to) +
+    "&token=" + encodeURIComponent(FINNHUB_KEY);
+
+  const data = await fetchJSON(url);
+
+  if (
+    !data ||
+    data.s !== "ok" ||
+    !Array.isArray(data.t) ||
+    !Array.isArray(data.c) ||
+    data.t.length === 0
+  ) {
+    throw new Error("No history");
+  }
+
+  const history = data.t.map((timestamp, index) => ({
+    date: new Date(timestamp * 1000),
+    close: Number(data.c[index])
+  }));
+
+  history.sort((a, b) => a.date - b.date);
+  return history;
+}
+
+function closeOnOrBefore(history, targetDate) {
+  const target = targetDate.getTime();
+
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (history[i].date.getTime() <= target) {
+      return history[i].close;
+    }
+  }
+
+  return null;
+}
+
+function calculateReturns(quote, history) {
+  const current = quote.current;
+
+  return {
+    day:
+      quote.dailyPct != null
+        ? quote.dailyPct
+        : percentChange(current, quote.previousClose),
+
+    fiveDay:
+      percentChange(
+        current,
+        closeOnOrBefore(history, daysAgo(5))
+      ),
+
+    oneMonth:
+      percentChange(
+        current,
+        closeOnOrBefore(history, monthsAgo(1))
+      ),
+
+    sixMonth:
+      percentChange(
+        current,
+        closeOnOrBefore(history, monthsAgo(6))
+      ),
+
+    ytd:
+      percentChange(
+        current,
+        closeOnOrBefore(history, previousYearEnd())
+      ),
+
+    oneYear:
+      percentChange(
+        current,
+        closeOnOrBefore(history, yearsAgo(1))
+      )
+  };
+}
+
+function createTables() {
+  for (const section of SECTIONS) {
+    const tbody = document.getElementById(section.id);
+    tbody.innerHTML = "";
+
+    for (const item of section.symbols) {
+      tbody.insertAdjacentHTML(
+        "beforeend",
+        `
+        <tr id="${rowID(section.id, item.ticker)}">
+          <td>${item.ticker}</td>
+          <td class="num day loading">—</td>
+          <td class="num five loading">—</td>
+          <td class="num month loading">—</td>
+          <td class="num six loading">—</td>
+          <td class="num ytd loading">—</td>
+          <td class="num year loading">—</td>
+        </tr>
+        `
+      );
+    }
+  }
+}
+
+function setCell(row, selector, value) {
+  const cell = row.querySelector(selector);
+  if (!cell) return;
+
+  cell.className = "num " + valueClass(value);
+  cell.textContent = formatPct(value);
+}
+
+function updateRow(sectionId, item, returns) {
+  const row = document.getElementById(rowID(sectionId, item.ticker));
+  if (!row) return;
+
+  setCell(row, ".day", returns.day);
+  setCell(row, ".five", returns.fiveDay);
+  setCell(row, ".month", returns.oneMonth);
+  setCell(row, ".six", returns.sixMonth);
+  setCell(row, ".ytd", returns.ytd);
+  setCell(row, ".year", returns.oneYear);
+}
+
+function showError(sectionId, item, message) {
+  const row = document.getElementById(rowID(sectionId, item.ticker));
+  if (!row) return;
+
+  row.title = message;
+
+  row.querySelectorAll(".num").forEach(cell => {
+    cell.className = "num error";
+    cell.textContent = "#N/A";
+  });
+}
+
+async function loadSecurity(sectionId, item) {
+  try {
+    const [quote, history] = await Promise.all([
+      getQuote(item.api),
+      getHistory(item.api)
+    ]);
+
+    updateRow(
+      sectionId,
+      item,
+      calculateReturns(quote, history)
+    );
+  } catch (error) {
+    console.error(item.ticker, error);
+    showError(sectionId, item, error.message);
+  }
+}
+
+async function loadDashboard() {
+  createTables();
+
+  const status = document.getElementById("status");
+  const jobs = [];
+
+  for (const section of SECTIONS) {
+    for (const item of section.symbols) {
+      jobs.push({ sectionId: section.id, item });
+    }
+  }
+
+  let completed = 0;
+  const total = jobs.length;
+  const BATCH_SIZE = 3;
+
+  for (let i = 0; i < jobs.length; i += BATCH_SIZE) {
+    const batch = jobs.slice(i, i + BATCH_SIZE);
+
+    await Promise.allSettled(
+      batch.map(async job => {
+        await loadSecurity(job.sectionId, job.item);
+        completed++;
+        status.textContent = "Loading " + completed + " of " + total + "...";
+      })
+    );
+
+    await sleep(1200);
+  }
+
+  status.textContent = "Last updated: " + new Date().toLocaleString();
+}
+
+if (FINNHUB_KEY === "YOUR_NEW_FINNHUB_KEY") {
+  createTables();
+  document.getElementById("status").textContent =
+    "Add your Finnhub API key to FINNHUB_KEY.";
+} else {
+  loadDashboard();
+}
+</script>
+</body>
+</html>
