@@ -3,851 +3,501 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Financial Markets Dashboard</title>
-
+  <title>Market Performance Dashboard</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      min-height: 100vh;
-      padding: 16px;
-      background: #f0f0f0;
-      color: #333;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      color: #000;
+      padding: 6px;
+      font-size: 12px;
     }
-
     .dashboard {
       width: 100%;
-      max-width: 1900px;
+      max-width: 1500px;
       margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.13fr;
+      gap: 14px;
+      align-items: start;
     }
-
-    .panel {
-      overflow-x: auto;
-      background: #fff;
-      border-radius: 7px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
-    }
-
-    .panel-header {
-      padding: 11px 15px;
-      background: #2c3e50;
-      color: #fff;
-      font-size: 16px;
+    .column { display: flex; flex-direction: column; gap: 14px; }
+    .section { width: 100%; }
+    .section-title {
+      background: #f0f0f0;
+      text-align: center;
       font-weight: 700;
+      font-size: 12px;
+      padding: 3px 2px;
+      border-bottom: 1px solid #d0d0d0;
     }
-
     table {
       width: 100%;
-      min-width: 1100px;
       border-collapse: collapse;
-      font-size: 14px;
+      table-layout: fixed;
+      font-size: 11px;
     }
-
-    thead th {
-      position: sticky;
-      top: 0;
-      z-index: 5;
-      padding: 9px 10px;
-      background: #f5f6f7;
-      color: #666;
-      border-bottom: 1px solid #d8d8d8;
-      text-align: left;
+    th {
+      background: #f5f5f5;
       font-weight: 700;
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 8px 10px;
-      border-bottom: 1px solid #eeeeee;
-    }
-
-    tbody tr:not(.group-header):hover {
-      background: #f9fafb;
-    }
-
-    .group-header td {
-      padding: 7px 10px;
-      background: #e9ecef;
-      color: #444;
-      border-top: 1px solid #d5d5d5;
-      border-bottom: 1px solid #d5d5d5;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .ticker {
-      width: 85px;
-      color: #1a56db;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .name {
-      min-width: 210px;
-      color: #555;
-      white-space: nowrap;
-    }
-
-    .num {
-      min-width: 80px;
       text-align: right;
+      padding: 3px;
+      border-bottom: 1px solid #d8d8d8;
       white-space: nowrap;
-      font-variant-numeric: tabular-nums;
     }
-
-    .up {
-      color: #159447;
-      font-weight: 600;
+    th:first-child { text-align: left; width: 70px; }
+    td {
+      padding: 3px;
+      border-bottom: 1px solid #f2f2f2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-
-    .down {
-      color: #d32f2f;
-      font-weight: 600;
+    td:first-child {
+      font-weight: 700;
+      text-align: left;
+      width: 70px;
+      background: #fafafa;
     }
-
-    .neutral {
-      color: #444;
-    }
-
-    .loading {
-      color: #aaa;
-    }
-
-    .error {
-      color: #999;
-    }
-
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .positive { background: #b7dfcf; }
+    .negative { background: #ef9a9a; }
+    .neutral { background: #fff; }
+    .loading, .error { color: #888; background: #fafafa; }
     #status {
-      max-width: 1900px;
+      max-width: 1500px;
       margin: 8px auto 0;
       color: #777;
-      font-size: 12px;
+      font-size: 10px;
       text-align: right;
     }
-
     @media (max-width: 900px) {
-      body {
-        padding: 5px;
-      }
-
-      table {
-        font-size: 12px;
-      }
-
-      td,
-      thead th {
-        padding: 6px 7px;
-      }
+      .dashboard { grid-template-columns: 1fr; }
+      body { padding: 4px; }
     }
   </style>
 </head>
-
 <body>
-  <div class="dashboard">
-    <div class="panel">
-      <div class="panel-header">Financial Markets Dashboard</div>
 
+<div class="dashboard">
+  <div class="column">
+    <div class="section">
+      <div class="section-title">Leveraged ETFs</div>
       <table>
-        <thead>
-          <tr>
-            <th>Ticker</th>
-            <th>Name</th>
-            <th class="num">Price</th>
-            <th class="num">1D</th>
-            <th class="num">1W</th>
-            <th class="num">1M</th>
-            <th class="num">3M</th>
-            <th class="num">6M</th>
-            <th class="num">YTD</th>
-            <th class="num">1Y</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="leveraged"></tbody>
+      </table>
+    </div>
 
-        <tbody id="market-table"></tbody>
+    <div class="section">
+      <div class="section-title">US Market</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="us-market"></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">World Market</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="world-market"></tbody>
       </table>
     </div>
   </div>
 
-  <div id="status">Loading...</div>
+  <div class="column">
+    <div class="section">
+      <div class="section-title">FINANCIALS</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="financials"></tbody>
+      </table>
+    </div>
 
-  <script>
-    /* =====================================================
-       API KEY
-       ===================================================== */
+    <div class="section">
+      <div class="section-title">Stocks</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="stocks"></tbody>
+      </table>
+    </div>
 
-    const FINNHUB_KEY = "db0gsr1r01qtcjfhku30db0gsr1r01qtcjfhku3g";
+    <div class="section">
+      <div class="section-title">Precious Metals</div>
+      <table>
+        <thead><tr><th>Name</th><th>Day</th><th>5 Day</th><th>1 month</th><th>6 Month</th><th>YTD</th><th>1 year</th></tr></thead>
+        <tbody id="precious"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
+<div id="status">Loading...</div>
 
-    /* =====================================================
-       DASHBOARD SECURITIES
-       ===================================================== */
+<script>
+const FINNHUB_KEY = "db0tkopr01qjveff7vugdb0tkopr01qjveff7vv0";
 
-    const GROUPS = [
-      {
-        name: "Financials",
-        symbols: [
-          { ticker: "TFC", api: "TFC", name: "Truist Financial" },
-          { ticker: "JPM", api: "JPM", name: "JPMorgan Chase" },
-          { ticker: "WT", api: "WT", name: "WisdomTree" },
-          { ticker: "IVZ", api: "IVZ", name: "Invesco" },
-          { ticker: "BRK.B", api: "BRK.B", name: "Berkshire Hathaway" }
-        ]
-      },
+const SECTIONS = [
+  {
+    id: "leveraged",
+    symbols: [
+      { ticker: "TQQQ", api: "TQQQ" },
+      { ticker: "SOXL", api: "SOXL" },
+      { ticker: "NAIL", api: "NAIL" },
+      { ticker: "FNGU", api: "FNGU" },
+      { ticker: "NVDL", api: "NVDL" },
+      { ticker: "FAS", api: "FAS" },
+      { ticker: "YINN", api: "YINN" },
+      { ticker: "YANG", api: "YANG" },
+      { ticker: "WANT", api: "WANT" },
+      { ticker: "RETL", api: "RETL" },
+      { ticker: "TSLL", api: "TSLL" },
+      { ticker: "AMDL", api: "AMDL" }
+    ]
+  },
+  {
+    id: "us-market",
+    symbols: [
+      { ticker: "SPY", api: "SPY" },
+      { ticker: "QQQ", api: "QQQ" },
+      { ticker: "ITA", api: "ITA" },
+      { ticker: "XLI", api: "XLI" },
+      { ticker: "VTI", api: "VTI" },
+      { ticker: "VONG", api: "VONG" }
+    ]
+  },
+  {
+    id: "world-market",
+    symbols: [
+      { ticker: "EWJ", api: "EWJ" },
+      { ticker: "MCHI", api: "MCHI" },
+      { ticker: "EWH", api: "EWH" },
+      { ticker: "EWU", api: "EWU" },
+      { ticker: "EWG", api: "EWG" },
+      { ticker: "VGK", api: "VGK" }
+    ]
+  },
+  {
+    id: "financials",
+    symbols: [
+      { ticker: "BLK", api: "BLK" },
+      { ticker: "BX", api: "BX" },
+      { ticker: "BNY", api: "BNY" },
+      { ticker: "KKR", api: "KKR" },
+      { ticker: "APO", api: "APO" },
+      { ticker: "STT", api: "STT" },
+      { ticker: "TROW", api: "TROW" },
+      { ticker: "BEN", api: "BEN" },
+      { ticker: "SCHW", api: "SCHW" },
+      { ticker: "TFC", api: "TFC" },
+      { ticker: "JPM", api: "JPM" },
+      { ticker: "WT", api: "WT" },
+      { ticker: "IVZ", api: "IVZ" }
+    ]
+  },
+  {
+    id: "stocks",
+    symbols: [
+      { ticker: "AMZN", api: "AMZN" },
+      { ticker: "MU", api: "MU" },
+      { ticker: "SPCX", api: "SPCX" },
+      { ticker: "NVDA", api: "NVDA" },
+      { ticker: "PSA", api: "PSA" },
+      { ticker: "TSLA", api: "TSLA" },
+      { ticker: "PYPL", api: "PYPL" },
+      { ticker: "COIN", api: "COIN" },
+      { ticker: "BRK.B", api: "BRK.B" },
+      { ticker: "META", api: "META" },
+      { ticker: "AVGO", api: "AVGO" },
+      { ticker: "MSFT", api: "MSFT" },
+      { ticker: "GOOGL", api: "GOOGL" },
+      { ticker: "AAPL", api: "AAPL" }
+    ]
+  },
+  {
+    id: "precious",
+    symbols: [
+      { ticker: "Silver", api: "SLV" },
+      { ticker: "Gold", api: "GLD" },
+      { ticker: "CPER", api: "CPER" }
+    ]
+  }
+];
 
-      {
-        name: "Stocks",
-        symbols: [
-          { ticker: "AMZN", api: "AMZN", name: "Amazon" },
-          { ticker: "MU", api: "MU", name: "Micron Technology" },
-          { ticker: "SPCX", api: "SPCX", name: "Tema Space ETF" },
-          { ticker: "NVDA", api: "NVDA", name: "NVIDIA" },
-          { ticker: "PSA", api: "PSA", name: "Public Storage" },
-          { ticker: "TSLA", api: "TSLA", name: "Tesla" },
-          { ticker: "PYPL", api: "PYPL", name: "PayPal" },
-          { ticker: "COIN", api: "COIN", name: "Coinbase" },
-          { ticker: "META", api: "META", name: "Meta Platforms" },
-          { ticker: "AVGO", api: "AVGO", name: "Broadcom" },
-          { ticker: "MSFT", api: "MSFT", name: "Microsoft" },
-          { ticker: "GOOGL", api: "GOOGL", name: "Alphabet" },
-          { ticker: "AAPL", api: "AAPL", name: "Apple" }
-        ]
-      },
+function safeID(value) {
+  return value.replace(/[^a-zA-Z0-9]/g, "-");
+}
+function rowID(sectionId, ticker) {
+  return sectionId + "-" + safeID(ticker);
+}
+function unix(date) {
+  return Math.floor(date.getTime() / 1000);
+}
+function daysAgo(days) {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  return d;
+}
+function monthsAgo(months) {
+  const d = new Date();
+  d.setMonth(d.getMonth() - months);
+  return d;
+}
+function yearsAgo(years) {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - years);
+  return d;
+}
+function previousYearEnd() {
+  const now = new Date();
+  return new Date(now.getFullYear() - 1, 11, 31, 23, 59, 59);
+}
+function percentChange(current, oldPrice) {
+  if (current == null || oldPrice == null || oldPrice === 0) return null;
+  return ((current / oldPrice) - 1) * 100;
+}
+function formatPct(value) {
+  if (value == null || Number.isNaN(value)) return "#N/A";
+  return value.toFixed(2) + "%";
+}
+function valueClass(value) {
+  if (value == null || Number.isNaN(value)) return "error";
+  if (value > 0) return "positive";
+  if (value < 0) return "negative";
+  return "neutral";
+}
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-      {
-        name: "Precious Metals & Commodities",
-        symbols: [
-          { ticker: "CPER", api: "CPER", name: "United States Copper Index Fund" },
-          { ticker: "GLD", api: "GLD", name: "SPDR Gold Shares" },
-          { ticker: "SLV", api: "SLV", name: "iShares Silver Trust" }
-        ]
-      },
+async function fetchJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("HTTP " + response.status);
+  return response.json();
+}
 
-      {
-        name: "Leveraged ETFs",
-        symbols: [
-          { ticker: "TQQQ", api: "TQQQ", name: "ProShares UltraPro QQQ 3X" },
-          { ticker: "SOXL", api: "SOXL", name: "Semiconductor Bull 3X" },
-          { ticker: "FNGU", api: "FNGU", name: "MicroSectors FANG+ 3X" },
-          { ticker: "NVDL", api: "NVDL", name: "NVIDIA 2X" },
-          { ticker: "FAS", api: "FAS", name: "Financial Bull 3X" },
-          { ticker: "NAIL", api: "NAIL", name: "Homebuilders Bull 3X" },
-          { ticker: "YINN", api: "YINN", name: "China Bull 3X" },
-          { ticker: "WANT", api: "WANT", name: "Consumer Discretionary Bull 3X" },
-          { ticker: "RETL", api: "RETL", name: "Retail Bull 3X" }
-        ]
-      },
+async function getQuote(symbol) {
+  const url =
+    "https://finnhub.io/api/v1/quote" +
+    "?symbol=" + encodeURIComponent(symbol) +
+    "&token=" + encodeURIComponent(FINNHUB_KEY);
 
-      {
-        name: "U.S. Market ETFs",
-        symbols: [
-          { ticker: "SPY", api: "SPY", name: "S&P 500 ETF" },
-          { ticker: "QQQ", api: "QQQ", name: "Nasdaq-100 ETF" },
-          { ticker: "ITA", api: "ITA", name: "U.S. Aerospace & Defense ETF" },
-          { ticker: "XLI", api: "XLI", name: "Industrial Select Sector SPDR" },
-          { ticker: "VTI", api: "VTI", name: "Vanguard Total Stock Market ETF" },
-          { ticker: "VONG", api: "VONG", name: "Russell 1000 Growth ETF" }
-        ]
-      },
+  const data = await fetchJSON(url);
 
-      {
-        name: "World Markets",
-        symbols: [
-          { ticker: "MCHI", api: "MCHI", name: "iShares MSCI China ETF" },
-          { ticker: "VGK", api: "VGK", name: "Vanguard FTSE Europe ETF" },
-          { ticker: "EWJ", api: "EWJ", name: "iShares MSCI Japan ETF" },
-          { ticker: "EWU", api: "EWU", name: "iShares MSCI United Kingdom ETF" },
-          { ticker: "EWG", api: "EWG", name: "iShares MSCI Germany ETF" },
-          { ticker: "EWH", api: "EWH", name: "iShares MSCI Hong Kong ETF" }
-        ]
-      }
-    ];
+  if (!data || data.c == null || data.c === 0) {
+    throw new Error("No quote");
+  }
 
+  return {
+    current: Number(data.c),
+    previousClose: data.pc != null ? Number(data.pc) : null,
+    dailyPct: data.dp != null ? Number(data.dp) : null
+  };
+}
 
-    /* =====================================================
-       BASIC HELPERS
-       ===================================================== */
+async function getHistory(symbol) {
+  const to = new Date();
+  const from = new Date();
+  from.setMonth(from.getMonth() - 14);
 
-    function safeID(value) {
-      return value.replace(/[^a-zA-Z0-9]/g, "-");
+  const url =
+    "https://finnhub.io/api/v1/stock/candle" +
+    "?symbol=" + encodeURIComponent(symbol) +
+    "&resolution=D" +
+    "&from=" + unix(from) +
+    "&to=" + unix(to) +
+    "&token=" + encodeURIComponent(FINNHUB_KEY);
+
+  const data = await fetchJSON(url);
+
+  if (
+    !data ||
+    data.s !== "ok" ||
+    !Array.isArray(data.t) ||
+    !Array.isArray(data.c) ||
+    data.t.length === 0
+  ) {
+    throw new Error("No history");
+  }
+
+  const history = data.t.map((timestamp, index) => ({
+    date: new Date(timestamp * 1000),
+    close: Number(data.c[index])
+  }));
+
+  history.sort((a, b) => a.date - b.date);
+  return history;
+}
+
+function closeOnOrBefore(history, targetDate) {
+  const target = targetDate.getTime();
+
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (history[i].date.getTime() <= target) {
+      return history[i].close;
     }
+  }
 
-    function rowID(ticker) {
-      return "row-" + safeID(ticker);
-    }
+  return null;
+}
 
-    function escapeHTML(value) {
-      return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      })[char]);
-    }
+function calculateReturns(quote, history) {
+  const current = quote.current;
 
-    function formatPrice(value) {
-      if (
-        value === null ||
-        value === undefined ||
-        Number.isNaN(value)
-      ) {
-        return "—";
-      }
+  return {
+    day:
+      quote.dailyPct != null
+        ? quote.dailyPct
+        : percentChange(current, quote.previousClose),
 
-      if (value >= 1000) {
-        return value.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
-      }
+    fiveDay:
+      percentChange(
+        current,
+        closeOnOrBefore(history, daysAgo(5))
+      ),
 
-      return value.toFixed(2);
-    }
+    oneMonth:
+      percentChange(
+        current,
+        closeOnOrBefore(history, monthsAgo(1))
+      ),
 
-    function percentChange(current, startingPrice) {
-      if (
-        current === null ||
-        startingPrice === null ||
-        startingPrice === undefined ||
-        startingPrice === 0
-      ) {
-        return null;
-      }
+    sixMonth:
+      percentChange(
+        current,
+        closeOnOrBefore(history, monthsAgo(6))
+      ),
 
-      return ((current / startingPrice) - 1) * 100;
-    }
+    ytd:
+      percentChange(
+        current,
+        closeOnOrBefore(history, previousYearEnd())
+      ),
 
-    function pctClass(value) {
-      if (
-        value === null ||
-        Number.isNaN(value)
-      ) {
-        return "neutral";
-      }
+    oneYear:
+      percentChange(
+        current,
+        closeOnOrBefore(history, yearsAgo(1))
+      )
+  };
+}
 
-      if (value > 0) {
-        return "up";
-      }
+function createTables() {
+  for (const section of SECTIONS) {
+    const tbody = document.getElementById(section.id);
+    tbody.innerHTML = "";
 
-      if (value < 0) {
-        return "down";
-      }
-
-      return "neutral";
-    }
-
-    function formatPct(value) {
-      if (
-        value === null ||
-        value === undefined ||
-        Number.isNaN(value)
-      ) {
-        return "—";
-      }
-
-      const sign = value > 0 ? "+" : "";
-
-      return sign + value.toFixed(2) + "%";
-    }
-
-    function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-
-    /* =====================================================
-       DATES
-       ===================================================== */
-
-    function unix(date) {
-      return Math.floor(date.getTime() / 1000);
-    }
-
-    function daysAgo(days) {
-      const date = new Date();
-      date.setDate(date.getDate() - days);
-      return date;
-    }
-
-    function monthsAgo(months) {
-      const date = new Date();
-      date.setMonth(date.getMonth() - months);
-      return date;
-    }
-
-    function yearsAgo(years) {
-      const date = new Date();
-      date.setFullYear(date.getFullYear() - years);
-      return date;
-    }
-
-    function endOfPreviousYear() {
-      const now = new Date();
-
-      return new Date(
-        now.getFullYear() - 1,
-        11,
-        31,
-        23,
-        59,
-        59
+    for (const item of section.symbols) {
+      tbody.insertAdjacentHTML(
+        "beforeend",
+        `
+        <tr id="${rowID(section.id, item.ticker)}">
+          <td>${item.ticker}</td>
+          <td class="num day loading">—</td>
+          <td class="num five loading">—</td>
+          <td class="num month loading">—</td>
+          <td class="num six loading">—</td>
+          <td class="num ytd loading">—</td>
+          <td class="num year loading">—</td>
+        </tr>
+        `
       );
     }
+  }
+}
 
+function setCell(row, selector, value) {
+  const cell = row.querySelector(selector);
+  if (!cell) return;
 
-    /* =====================================================
-       FINNHUB REQUESTS
-       ===================================================== */
+  cell.className = "num " + valueClass(value);
+  cell.textContent = formatPct(value);
+}
 
-    async function fetchJSON(url) {
-      const response = await fetch(url);
+function updateRow(sectionId, item, returns) {
+  const row = document.getElementById(rowID(sectionId, item.ticker));
+  if (!row) return;
 
-      if (!response.ok) {
-        throw new Error("HTTP " + response.status);
-      }
+  setCell(row, ".day", returns.day);
+  setCell(row, ".five", returns.fiveDay);
+  setCell(row, ".month", returns.oneMonth);
+  setCell(row, ".six", returns.sixMonth);
+  setCell(row, ".ytd", returns.ytd);
+  setCell(row, ".year", returns.oneYear);
+}
 
-      return response.json();
+function showError(sectionId, item, message) {
+  const row = document.getElementById(rowID(sectionId, item.ticker));
+  if (!row) return;
+
+  row.title = message;
+
+  row.querySelectorAll(".num").forEach(cell => {
+    cell.className = "num error";
+    cell.textContent = "#N/A";
+  });
+}
+
+async function loadSecurity(sectionId, item) {
+  try {
+    const [quote, history] = await Promise.all([
+      getQuote(item.api),
+      getHistory(item.api)
+    ]);
+
+    updateRow(
+      sectionId,
+      item,
+      calculateReturns(quote, history)
+    );
+  } catch (error) {
+    console.error(item.ticker, error);
+    showError(sectionId, item, error.message);
+  }
+}
+
+async function loadDashboard() {
+  createTables();
+
+  const status = document.getElementById("status");
+  const jobs = [];
+
+  for (const section of SECTIONS) {
+    for (const item of section.symbols) {
+      jobs.push({ sectionId: section.id, item });
     }
-
-    async function getQuote(symbol) {
-      const url =
-        "https://finnhub.io/api/v1/quote" +
-        "?symbol=" + encodeURIComponent(symbol) +
-        "&token=" + encodeURIComponent(FINNHUB_KEY);
-
-      const data = await fetchJSON(url);
-
-      if (
-        !data ||
-        data.c === undefined ||
-        data.c === null ||
-        data.c === 0
-      ) {
-        throw new Error("No current quote");
-      }
-
-      return {
-        current: Number(data.c),
-        previousClose: data.pc ? Number(data.pc) : null,
-        dailyPct:
-          data.dp !== undefined
-            ? Number(data.dp)
-            : null
-      };
-    }
-
-    async function getHistory(symbol) {
-      const to = new Date();
-      const from = new Date();
-
-      from.setMonth(from.getMonth() - 14);
-
-      const url =
-        "https://finnhub.io/api/v1/stock/candle" +
-        "?symbol=" + encodeURIComponent(symbol) +
-        "&resolution=D" +
-        "&from=" + unix(from) +
-        "&to=" + unix(to) +
-        "&token=" + encodeURIComponent(FINNHUB_KEY);
-
-      const data = await fetchJSON(url);
-
-      if (
-        !data ||
-        data.s !== "ok" ||
-        !Array.isArray(data.t) ||
-        !Array.isArray(data.c) ||
-        data.t.length === 0
-      ) {
-        throw new Error("Historical data unavailable");
-      }
-
-      const history = data.t.map((timestamp, index) => ({
-        date: new Date(timestamp * 1000),
-        close: Number(data.c[index])
-      }));
-
-      history.sort((a, b) => a.date - b.date);
-
-      return history;
-    }
-
-
-    /* =====================================================
-       HISTORICAL PRICE LOOKUP
-       ===================================================== */
-
-    function closeOnOrBefore(history, targetDate) {
-      const target = targetDate.getTime();
-
-      for (let i = history.length - 1; i >= 0; i--) {
-        if (history[i].date.getTime() <= target) {
-          return history[i].close;
-        }
-      }
-
-      return null;
-    }
-
-
-    /* =====================================================
-       PERFORMANCE CALCULATION
-       ===================================================== */
-
-    function calculatePerformance(quote, history) {
-      const current = quote.current;
-
-      const weekPrice =
-        closeOnOrBefore(history, daysAgo(7));
-
-      const monthPrice =
-        closeOnOrBefore(history, monthsAgo(1));
-
-      const threeMonthPrice =
-        closeOnOrBefore(history, monthsAgo(3));
-
-      const sixMonthPrice =
-        closeOnOrBefore(history, monthsAgo(6));
-
-      const oneYearPrice =
-        closeOnOrBefore(history, yearsAgo(1));
-
-      const yearEndPrice =
-        closeOnOrBefore(history, endOfPreviousYear());
-
-      return {
-        day:
-          quote.dailyPct !== null
-            ? quote.dailyPct
-            : percentChange(
-                current,
-                quote.previousClose
-              ),
-
-        week:
-          percentChange(
-            current,
-            weekPrice
-          ),
-
-        month:
-          percentChange(
-            current,
-            monthPrice
-          ),
-
-        threeMonth:
-          percentChange(
-            current,
-            threeMonthPrice
-          ),
-
-        sixMonth:
-          percentChange(
-            current,
-            sixMonthPrice
-          ),
-
-        ytd:
-          percentChange(
-            current,
-            yearEndPrice
-          ),
-
-        year:
-          percentChange(
-            current,
-            oneYearPrice
-          )
-      };
-    }
-
-
-    /* =====================================================
-       BUILD TABLE
-       ===================================================== */
-
-    function createTable() {
-      const tbody =
-        document.getElementById("market-table");
-
-      tbody.innerHTML = "";
-
-      for (const group of GROUPS) {
-        tbody.insertAdjacentHTML(
-          "beforeend",
-          `
-          <tr class="group-header">
-            <td colspan="10">
-              ${escapeHTML(group.name)}
-            </td>
-          </tr>
-          `
-        );
-
-        for (const stock of group.symbols) {
-          tbody.insertAdjacentHTML(
-            "beforeend",
-            `
-            <tr id="${rowID(stock.ticker)}">
-              <td class="ticker">
-                ${escapeHTML(stock.ticker)}
-              </td>
-
-              <td class="name">
-                ${escapeHTML(stock.name)}
-              </td>
-
-              <td class="num price loading">—</td>
-              <td class="num d1 loading">—</td>
-              <td class="num w1 loading">—</td>
-              <td class="num m1 loading">—</td>
-              <td class="num m3 loading">—</td>
-              <td class="num m6 loading">—</td>
-              <td class="num ytd loading">—</td>
-              <td class="num y1 loading">—</td>
-            </tr>
-            `
-          );
-        }
-      }
-    }
-
-
-    /* =====================================================
-       UPDATE CELLS
-       ===================================================== */
-
-    function setPercentCell(row, selector, value) {
-      const cell = row.querySelector(selector);
-
-      if (!cell) {
-        return;
-      }
-
-      cell.className =
-        "num " + pctClass(value);
-
-      cell.textContent =
-        formatPct(value);
-    }
-
-    function updateRow(stock, quote, returns) {
-      const row =
-        document.getElementById(
-          rowID(stock.ticker)
-        );
-
-      if (!row) {
-        return;
-      }
-
-      const priceCell =
-        row.querySelector(".price");
-
-      priceCell.className =
-        "num neutral";
-
-      priceCell.textContent =
-        formatPrice(quote.current);
-
-      setPercentCell(
-        row,
-        ".d1",
-        returns.day
-      );
-
-      setPercentCell(
-        row,
-        ".w1",
-        returns.week
-      );
-
-      setPercentCell(
-        row,
-        ".m1",
-        returns.month
-      );
-
-      setPercentCell(
-        row,
-        ".m3",
-        returns.threeMonth
-      );
-
-      setPercentCell(
-        row,
-        ".m6",
-        returns.sixMonth
-      );
-
-      setPercentCell(
-        row,
-        ".ytd",
-        returns.ytd
-      );
-
-      setPercentCell(
-        row,
-        ".y1",
-        returns.year
-      );
-    }
-
-    function showRowError(stock, message) {
-      const row =
-        document.getElementById(
-          rowID(stock.ticker)
-        );
-
-      if (!row) {
-        return;
-      }
-
-      const cells =
-        row.querySelectorAll(
-          ".price, .d1, .w1, .m1, .m3, .m6, .ytd, .y1"
-        );
-
-      cells.forEach(cell => {
-        cell.textContent = "—";
-        cell.classList.remove("loading");
-        cell.classList.add("error");
-      });
-
-      row.title = message;
-    }
-
-
-    /* =====================================================
-       LOAD INDIVIDUAL SECURITY
-       ===================================================== */
-
-    async function loadSecurity(stock) {
-      try {
-        const [quote, history] =
-          await Promise.all([
-            getQuote(stock.api),
-            getHistory(stock.api)
-          ]);
-
-        const returns =
-          calculatePerformance(
-            quote,
-            history
-          );
-
-        updateRow(
-          stock,
-          quote,
-          returns
-        );
-      }
-
-      catch (error) {
-        console.error(
-          stock.ticker,
-          error
-        );
-
-        showRowError(
-          stock,
-          error.message
-        );
-      }
-    }
-
-
-    /* =====================================================
-       LOAD FULL DASHBOARD
-       ===================================================== */
-
-    async function loadDashboard() {
-      createTable();
-
-      const status =
-        document.getElementById("status");
-
-      const securities =
-        GROUPS.flatMap(
-          group => group.symbols
-        );
-
-      const total =
-        securities.length;
-
-      let completed =
-        0;
-
-      const BATCH_SIZE =
-        3;
-
-      for (
-        let i = 0;
-        i < securities.length;
-        i += BATCH_SIZE
-      ) {
-        const batch =
-          securities.slice(
-            i,
-            i + BATCH_SIZE
-          );
-
-        await Promise.allSettled(
-          batch.map(
-            async stock => {
-              await loadSecurity(stock);
-
-              completed++;
-
-              status.textContent =
-                "Loading " +
-                completed +
-                " of " +
-                total +
-                "...";
-            }
-          )
-        );
-
-        await sleep(1200);
-      }
-
-      const now =
-        new Date();
-
-      status.textContent =
-        "Last updated: " +
-        now.toLocaleString();
-    }
-
-
-    /* =====================================================
-       START
-       ===================================================== */
-
-    if (
-      FINNHUB_KEY ===
-      "YOUR_NEW_FINNHUB_KEY"
-    ) {
-      document.getElementById(
-        "status"
-      ).textContent =
-        "Add your Finnhub API key in the FINNHUB_KEY setting.";
-
-      createTable();
-    }
-
-    else {
-      loadDashboard();
-    }
-  </script>
+  }
+
+  let completed = 0;
+  const total = jobs.length;
+  const BATCH_SIZE = 3;
+
+  for (let i = 0; i < jobs.length; i += BATCH_SIZE) {
+    const batch = jobs.slice(i, i + BATCH_SIZE);
+
+    await Promise.allSettled(
+      batch.map(async job => {
+        await loadSecurity(job.sectionId, job.item);
+        completed++;
+        status.textContent = "Loading " + completed + " of " + total + "...";
+      })
+    );
+
+    await sleep(1200);
+  }
+
+  status.textContent = "Last updated: " + new Date().toLocaleString();
+}
+
+if (FINNHUB_KEY === "YOUR_NEW_FINNHUB_KEY") {
+  createTables();
+  document.getElementById("status").textContent =
+    "Add your Finnhub API key to FINNHUB_KEY.";
+} else {
+  loadDashboard();
+}
+</script>
 </body>
 </html>
