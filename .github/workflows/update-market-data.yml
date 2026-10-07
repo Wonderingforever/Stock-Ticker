@@ -2,8 +2,8 @@ name: Update market dashboard
 
 on:
   workflow_dispatch:
-schedule:
-  - cron: "31 * * * 1-5"
+  schedule:
+    - cron: "31 * * * 1-5"
 
 permissions:
   contents: write
