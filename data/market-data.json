@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T20:39:44.107618+00:00",
+  "updated_at": "2026-10-08T20:46:55.859367+00:00",
   "sections": {
     "leveraged": [
       {
@@ -285,7 +285,7 @@
         "one_month": -3.5582,
         "six_month": 16.3194,
         "ytd": 5.8638,
-        "one_year": 3.6775
+        "one_year": 3.6776
       },
       {
         "ticker": "BEN",
