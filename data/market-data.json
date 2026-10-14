@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-14T02:06:28.110655+00:00",
+  "updated_at": "2026-10-14T07:57:27.061203+00:00",
   "sections": {
     "leveraged": [
       {
@@ -54,7 +54,7 @@
         "one_month": -11.5444,
         "six_month": 12.5952,
         "ytd": -8.7809,
-        "one_year": -2.8526
+        "one_year": -2.8525
       },
       {
         "ticker": "YINN",
@@ -119,7 +119,7 @@
         "one_month": 2.5053,
         "six_month": 12.5985,
         "ytd": 14.9822,
-        "one_year": 18.7509
+        "one_year": 18.7508
       },
       {
         "ticker": "QQQ",
@@ -339,7 +339,7 @@
         "one_month": -8.2196,
         "six_month": 18.6929,
         "ytd": 12.5914,
-        "one_year": 27.2456
+        "one_year": 27.245
       }
     ],
     "stocks": [
@@ -449,7 +449,7 @@
         "one_month": 7.5266,
         "six_month": 38.804,
         "ytd": 13.0842,
-        "one_year": 6.6888
+        "one_year": 6.6887
       },
       {
         "ticker": "GOOGL",
