@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-16T01:36:15.271363+00:00",
+  "updated_at": "2026-10-16T07:28:17.731615+00:00",
   "sections": {
     "leveraged": [
       {
@@ -99,7 +99,7 @@
         "one_month": 0.8102,
         "six_month": -27.6274,
         "ytd": -50.1204,
-        "one_year": -48.7041
+        "one_year": -48.7038
       },
       {
         "ticker": "AMDL",
@@ -274,7 +274,7 @@
         "day": 0.4254,
         "five_day": -4.2067,
         "one_month": -7.8798,
-        "six_month": 19.3281,
+        "six_month": 19.328,
         "ytd": 32.9936,
         "one_year": 51.9035
       },
@@ -302,7 +302,7 @@
         "five_day": -2.6267,
         "one_month": -10.4603,
         "six_month": 2.325,
-        "ytd": -4.8209,
+        "ytd": -4.8208,
         "one_year": 2.0913
       },
       {
