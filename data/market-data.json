@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-19T05:09:58.211397+00:00",
+  "updated_at": "2026-10-19T11:08:22.580103+00:00",
   "sections": {
     "leveraged": [
       {
@@ -137,7 +137,7 @@
         "one_month": -2.2306,
         "six_month": -9.6925,
         "ytd": -2.3731,
-        "one_year": 1.7799
+        "one_year": 1.7798
       },
       {
         "ticker": "XLI",
@@ -404,7 +404,7 @@
         "one_month": 8.1855,
         "six_month": 12.2366,
         "ytd": -2.0211,
-        "one_year": -14.9499
+        "one_year": -14.9498
       },
       {
         "ticker": "COIN",
