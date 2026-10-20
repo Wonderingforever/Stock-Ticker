@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-20T02:01:11.587498+00:00",
+  "updated_at": "2026-10-20T07:53:07.634067+00:00",
   "sections": {
     "leveraged": [
       {
@@ -53,7 +53,7 @@
         "five_day": -0.9381,
         "one_month": -4.5508,
         "six_month": 8.7627,
-        "ytd": -7.6775,
+        "ytd": -7.6774,
         "one_year": 1.4159
       },
       {
@@ -220,7 +220,7 @@
         "one_month": -2.0179,
         "six_month": -1.1421,
         "ytd": 5.5332,
-        "one_year": 9.76
+        "one_year": 9.7602
       }
     ],
     "financials": [
