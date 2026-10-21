@@ -42,12 +42,6 @@ SECTIONS = {
         ("VGK", "VGK"),
     ],
     "financials": [
-        ("BLK", "BLK"),
-        ("BX", "BX"),
-        ("BNY", "BK"),   # BNY Mellon trades as BK
-        ("KKR", "KKR"),
-        ("APO", "APO"),
-        ("STT", "STT"),
         ("TROW", "TROW"),
         ("BEN", "BEN"),
         ("SCHW", "SCHW"),
@@ -55,6 +49,20 @@ SECTIONS = {
         ("JPM", "JPM"),
         ("WT", "WT"),
         ("IVZ", "IVZ"),
+        ("MS", "MS"),
+        ("ICE", "ICE"),
+        ("NDAQ", "NDAQ"),
+        ("CME", "CME"),
+        ("GS", "GS"),
+        ("APAM", "APAM"),
+        ("CNS", "CNS"),
+        ("SPGI", "SPGI"),
+        ("FHI", "FHI"),
+        ("C", "C"),
+        ("CG", "CG"),
+        ("WU", "WU"),
+        ("MSCI", "MSCI"),
+        
     ],
     "stocks": [
         ("AMZN", "AMZN"),
