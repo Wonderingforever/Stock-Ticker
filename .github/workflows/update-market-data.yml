@@ -3,7 +3,9 @@ name: Update market dashboard
 on:
   workflow_dispatch:
   schedule:
-    - cron: "31 * * * 1-5"
+       - cron: '31 8-16 * * 1-5'
+         timezone: 'America/Chicago'
+
 
 permissions:
   contents: write
