@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-21T00:21:47.948816+00:00",
+  "updated_at": "2026-10-21T00:33:47.308855+00:00",
   "sections": {
     "leveraged": [
       {
@@ -258,7 +258,7 @@
         "one_month": -5.4694,
         "six_month": -7.4344,
         "ytd": -2.9667,
-        "one_year": 10.208
+        "one_year": 10.2083
       },
       {
         "ticker": "JPM",
@@ -301,7 +301,7 @@
         "day": 0.1073,
         "five_day": -1.9559,
         "one_month": 1.9502,
-        "six_month": 0.5592,
+        "six_month": 0.5591,
         "ytd": -1.1903,
         "one_year": 2.3724
       },
@@ -357,7 +357,7 @@
         "one_month": 5.7755,
         "six_month": 2.1626,
         "ytd": -12.8681,
-        "one_year": -5.695
+        "one_year": -5.6951
       },
       {
         "ticker": "FHI",
@@ -512,7 +512,7 @@
         "one_month": 6.3615,
         "six_month": 26.2925,
         "ytd": 11.0179,
-        "one_year": 3.9117
+        "one_year": 3.9118
       },
       {
         "ticker": "GOOGL",
