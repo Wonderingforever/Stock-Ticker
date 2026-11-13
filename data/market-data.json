@@ -1,114 +1,114 @@
 {
-  "updated_at": "2026-11-12T21:31:35.213759+00:00",
+  "updated_at": "2026-11-13T02:46:59.023872+00:00",
   "sections": {
     "leveraged": [
       {
         "ticker": "TQQQ",
         "day": -0.9265,
         "five_day": 14.6029,
-        "one_month": -24.7833,
-        "six_month": -19.7787,
+        "one_month": -24.0198,
+        "six_month": -22.1466,
         "ytd": 14.2515,
-        "one_year": 8.1626
+        "one_year": 15.2831
       },
       {
         "ticker": "SOXL",
         "day": -0.7572,
         "five_day": 42.5495,
-        "one_month": -48.9642,
-        "six_month": -61.9911,
+        "one_month": -48.6321,
+        "six_month": -64.4089,
         "ytd": 56.0145,
-        "one_year": 50.0181
+        "one_year": 67.1927
       },
       {
         "ticker": "NAIL",
         "day": -5.1053,
         "five_day": -8.7885,
-        "one_month": 31.4423,
-        "six_month": -7.8834,
+        "one_month": 28.5658,
+        "six_month": -3.5072,
         "ytd": -33.164,
-        "one_year": -41.4905
+        "one_year": -38.4076
       },
       {
         "ticker": "FNGU",
         "day": -0.3549,
         "five_day": 12.7622,
-        "one_month": -30.9751,
-        "six_month": -12.3786,
+        "one_month": -31.1256,
+        "six_month": -15.7105,
         "ytd": 0.0396,
-        "one_year": -18.1141
+        "one_year": -12.9221
       },
       {
         "ticker": "NVDL",
         "day": -8.9706,
         "five_day": -21.6786,
-        "one_month": -48.3162,
-        "six_month": -50.9292,
+        "one_month": -49.2346,
+        "six_month": -53.0547,
         "ytd": -36.7004,
-        "one_year": -42.9901
+        "one_year": -38.6724
       },
       {
         "ticker": "FAS",
         "day": -2.1103,
         "five_day": 5.3299,
-        "one_month": 15.9358,
-        "six_month": 35.1797,
-        "ytd": 7.1188,
-        "one_year": 13.0282
+        "one_month": 17.4301,
+        "six_month": 39.6412,
+        "ytd": 7.1187,
+        "one_year": 17.6979
       },
       {
         "ticker": "YINN",
         "day": -4.0249,
         "five_day": -12.2867,
-        "one_month": -7.3688,
-        "six_month": -34.2616,
+        "one_month": -7.7015,
+        "six_month": -38.7614,
         "ytd": -44.0137,
-        "one_year": -53.6322
+        "one_year": -52.6869
       },
       {
         "ticker": "YANG",
         "day": 3.9148,
         "five_day": 13.5135,
-        "one_month": 5.0332,
-        "six_month": 29.7427,
+        "one_month": 5.3333,
+        "six_month": 40.1177,
         "ytd": 34.962,
-        "one_year": 60.2542
+        "one_year": 57.0287
       },
       {
         "ticker": "WANT",
         "day": -1.2462,
         "five_day": 6.959,
-        "one_month": 20.0617,
-        "six_month": -5.0666,
+        "one_month": 19.8264,
+        "six_month": -6.0605,
         "ytd": -14.009,
-        "one_year": -14.6649
+        "one_year": -7.8949
       },
       {
         "ticker": "RETL",
         "day": -5.4639,
         "five_day": 3.4989,
-        "one_month": 20.6579,
-        "six_month": 26.9415,
+        "one_month": 19.8693,
+        "six_month": 31.4639,
         "ytd": 0.4249,
-        "one_year": 12.5043
+        "one_year": 16.6133
       },
       {
         "ticker": "TSLL",
         "day": 3.3589,
         "five_day": 22.3864,
-        "one_month": 6.1084,
-        "six_month": -31.5116,
+        "one_month": 7.7,
+        "six_month": -35.0904,
         "ytd": -42.3602,
-        "one_year": -39.6889
+        "one_year": -30.3733
       },
       {
         "ticker": "AMDL",
         "day": 11.8708,
         "five_day": 66.4542,
-        "one_month": -15.2421,
-        "six_month": 15.9053,
+        "one_month": -18.3133,
+        "six_month": 17.4255,
         "ytd": 303.0225,
-        "one_year": 163.9848
+        "one_year": 188.4031
       }
     ],
     "us-market": [
@@ -116,55 +116,55 @@
         "ticker": "SPY",
         "day": -0.354,
         "five_day": 2.9689,
-        "one_month": -2.6963,
-        "six_month": 3.0853,
+        "one_month": -2.6851,
+        "six_month": 2.5118,
         "ytd": 11.8949,
-        "one_year": 11.9858
+        "one_year": 13.8754
       },
       {
         "ticker": "QQQ",
         "day": -0.3201,
         "five_day": 4.888,
-        "one_month": -7.757,
-        "six_month": -2.488,
+        "one_month": -7.4505,
+        "six_month": -3.5071,
         "ytd": 12.4048,
-        "one_year": 11.3228
+        "one_year": 13.6429
       },
       {
         "ticker": "ITA",
         "day": -2.0617,
         "five_day": 3.9867,
-        "one_month": 4.4459,
-        "six_month": -4.3478,
+        "one_month": 5.4853,
+        "six_month": -4.4833,
         "ytd": 0.4847,
-        "one_year": 2.9052
+        "one_year": 5.2139
       },
       {
         "ticker": "XLI",
         "day": -0.8949,
         "five_day": 4.1618,
-        "one_month": 0.1714,
-        "six_month": -2.3152,
+        "one_month": 0.4565,
+        "six_month": -1.9045,
         "ytd": 10.1031,
-        "one_year": 11.0026
+        "one_year": 12.748
       },
       {
         "ticker": "VTI",
         "day": -0.4355,
         "five_day": 2.9536,
-        "one_month": -2.3456,
-        "six_month": 3.2649,
+        "one_month": -2.2815,
+        "six_month": 2.7213,
         "ytd": 12.0913,
-        "one_year": 12.2118
+        "one_year": 14.2356
       },
       {
         "ticker": "VONG",
         "day": -0.383,
         "five_day": 4.0077,
-        "one_month": -8.595,
-        "six_month": -5.5113,
+        "one_month": -8.5461,
+        "six_month": -6.2938,
         "ytd": -1.3736,
-        "one_year": -2.6847
+        "one_year": -0.576
       }
     ],
     "world-market": [
@@ -173,54 +173,54 @@
         "day": -0.7056,
         "five_day": 3.637,
         "one_month": -6.0111,
-        "six_month": -0.101,
+        "six_month": -1.2063,
         "ytd": 13.9051,
-        "one_year": 13.1231
+        "one_year": 14.9356
       },
       {
         "ticker": "MCHI",
         "day": -1.8544,
         "five_day": -4.1241,
-        "one_month": -4.6021,
-        "six_month": -13.9671,
+        "one_month": -4.5838,
+        "six_month": -16.2406,
         "ytd": -16.6311,
-        "one_year": -21.5053
+        "one_year": -21.3593
       },
       {
         "ticker": "EWH",
         "day": 0.477,
         "five_day": -0.6432,
-        "one_month": 5.51,
-        "six_month": -2.6278,
+        "one_month": 3.6689,
+        "six_month": -4.0953,
         "ytd": 10.7982,
-        "one_year": 5.0151
+        "one_year": 6.1622
       },
       {
         "ticker": "EWU",
         "day": -0.1255,
         "five_day": 1.1436,
-        "one_month": 2.2698,
-        "six_month": 3.9574,
+        "one_month": 2.0077,
+        "six_month": 3.2923,
         "ytd": 10.1504,
-        "one_year": 13.4908
+        "one_year": 14.7299
       },
       {
         "ticker": "EWG",
         "day": -0.4881,
         "five_day": 2.9582,
-        "one_month": 4.5166,
-        "six_month": 4.1218,
+        "one_month": 3.9078,
+        "six_month": 3.5787,
         "ytd": 2.7498,
-        "one_year": 4.7714
+        "one_year": 5.8637
       },
       {
         "ticker": "VGK",
         "day": -0.6148,
         "five_day": 1.8326,
-        "one_month": 3.6006,
-        "six_month": 3.7142,
+        "one_month": 3.0124,
+        "six_month": 3.134,
         "ytd": 8.5613,
-        "one_year": 11.3724
+        "one_year": 12.177
       }
     ],
     "financials": [
@@ -228,181 +228,181 @@
         "ticker": "TROW",
         "day": -2.2315,
         "five_day": -0.1753,
-        "one_month": 4.0677,
-        "six_month": 7.8189,
+        "one_month": 6.7364,
+        "six_month": 7.641,
         "ytd": 9.9163,
-        "one_year": 8.7252
+        "one_year": 9.8259
       },
       {
         "ticker": "BEN",
         "day": -1.2121,
         "five_day": 6.3149,
-        "one_month": 12.7318,
-        "six_month": 15.4971,
+        "one_month": 15.0096,
+        "six_month": 14.1995,
         "ytd": 55.3969,
-        "one_year": 63.2694
+        "one_year": 68.8364
       },
       {
         "ticker": "SCHW",
         "day": -1.1425,
         "five_day": 0.2514,
-        "one_month": -5.5018,
-        "six_month": 2.0043,
+        "one_month": -4.3986,
+        "six_month": 0.8967,
         "ytd": -7.2873,
-        "one_year": -4.9306
+        "one_year": -2.5878
       },
       {
         "ticker": "TFC",
         "day": -0.7362,
         "five_day": 1.0328,
-        "one_month": 6.9683,
-        "six_month": 5.4289,
+        "one_month": 8.6455,
+        "six_month": 8.2605,
         "ytd": 4.5119,
-        "one_year": 13.9947
+        "one_year": 14.7744
       },
       {
         "ticker": "JPM",
         "day": -0.166,
         "five_day": 2.4904,
-        "one_month": 2.5486,
-        "six_month": 13.5143,
+        "one_month": 3.4366,
+        "six_month": 15.2647,
         "ytd": 8.4422,
-        "one_year": 9.0548
+        "one_year": 12.9064
       },
       {
         "ticker": "WT",
         "day": 0.9795,
         "five_day": 11.3002,
-        "one_month": -2.5122,
-        "six_month": 16.163,
+        "one_month": 0.33,
+        "six_month": 11.3952,
         "ytd": 78.7203,
-        "one_year": 87.8101
+        "one_year": 89.4437
       },
       {
         "ticker": "IVZ",
         "day": -0.5589,
         "five_day": 5.1329,
-        "one_month": -2.6999,
-        "six_month": 1.7771,
+        "one_month": -1.556,
+        "six_month": 2.828,
         "ytd": 10.8395,
-        "one_year": 19.1188
+        "one_year": 22.4969
       },
       {
         "ticker": "MS",
         "day": -0.7555,
         "five_day": 4.2604,
-        "one_month": 0.1589,
-        "six_month": -0.266,
+        "one_month": 1.9728,
+        "six_month": -1.2693,
         "ytd": 8.9724,
-        "one_year": 13.8528
+        "one_year": 16.8158
       },
       {
         "ticker": "ICE",
         "day": -1.5117,
         "five_day": 3.2449,
-        "one_month": 12.9844,
-        "six_month": 14.9568,
+        "one_month": 13.7067,
+        "six_month": 15.7068,
         "ytd": 10.9489,
-        "one_year": 16.9937
+        "one_year": 18.028
       },
       {
         "ticker": "NDAQ",
         "day": -0.9391,
         "five_day": 1.4283,
-        "one_month": 15.2296,
-        "six_month": 22.2576,
+        "one_month": 16.2281,
+        "six_month": 21.2819,
         "ytd": 12.9978,
-        "one_year": 24.0103
+        "one_year": 25.911
       },
       {
         "ticker": "CME",
         "day": -0.1156,
         "five_day": 3.1417,
-        "one_month": 13.8003,
-        "six_month": 11.5047,
+        "one_month": 13.477,
+        "six_month": 7.2341,
         "ytd": 19.4674,
-        "one_year": 17.2278
+        "one_year": 15.5905
       },
       {
         "ticker": "GS",
         "day": -1.4253,
         "five_day": 5.5185,
-        "one_month": 2.1981,
-        "six_month": -2.5139,
+        "one_month": 2.4319,
+        "six_month": -3.4853,
         "ytd": 5.4577,
-        "one_year": 11.0372
+        "one_year": 15.651
       },
       {
         "ticker": "APAM",
         "day": -1.0133,
         "five_day": -2.6323,
-        "one_month": 17.4838,
-        "six_month": 7.3527,
+        "one_month": 21.92,
+        "six_month": 7.5275,
         "ytd": 0.9815,
-        "one_year": -5.2576
+        "one_year": -3.4052
       },
       {
         "ticker": "CNS",
         "day": -1.7877,
         "five_day": -1.5304,
-        "one_month": 4.4786,
-        "six_month": 0.5564,
+        "one_month": 4.6758,
+        "six_month": -0.1483,
         "ytd": 18.034,
-        "one_year": 11.9192
+        "one_year": 13.1496
       },
       {
         "ticker": "SPGI",
         "day": -1.3892,
         "five_day": 0.1518,
-        "one_month": 13.6636,
-        "six_month": 17.2837,
+        "one_month": 14.2735,
+        "six_month": 22.3668,
         "ytd": -4.5832,
-        "one_year": 0.7622
+        "one_year": -0.6643
       },
       {
         "ticker": "FHI",
         "day": -1.7783,
         "five_day": -0.7345,
-        "one_month": 14.0446,
-        "six_month": 14.509,
+        "one_month": 16.0749,
+        "six_month": 15.1037,
         "ytd": 25.1418,
-        "one_year": 29.3652
+        "one_year": 32.4418
       },
       {
         "ticker": "C",
         "day": -0.1208,
         "five_day": 4.2083,
-        "one_month": -5.4416,
-        "six_month": -0.8417,
+        "one_month": 0.1698,
+        "six_month": 1.028,
         "ytd": 8.5143,
-        "one_year": 23.0926
+        "one_year": 25.7826
       },
       {
         "ticker": "CG",
         "day": -4.2802,
         "five_day": -0.8564,
-        "one_month": 2.902,
-        "six_month": -20.1987,
+        "one_month": 5.6928,
+        "six_month": -18.7702,
         "ytd": -32.0065,
-        "one_year": -27.0184
+        "one_year": -24.7502
       },
       {
         "ticker": "WU",
         "day": -1.1887,
         "five_day": -3.343,
-        "one_month": 8.838,
-        "six_month": -19.3959,
+        "one_month": 9.0164,
+        "six_month": -15.7663,
         "ytd": -21.6993,
-        "one_year": -16.1222
+        "one_year": -16.4971
       },
       {
         "ticker": "MSCI",
         "day": -1.5147,
         "five_day": 1.638,
-        "one_month": 14.7004,
-        "six_month": 12.9259,
-        "ytd": 14.8254,
-        "one_year": 13.7887
+        "one_month": 16.171,
+        "six_month": 14.9395,
+        "ytd": 14.8253,
+        "one_year": 15.2653
       }
     ],
     "stocks": [
@@ -410,25 +410,25 @@
         "ticker": "AMZN",
         "day": 0.4771,
         "five_day": 3.1392,
-        "one_month": 3.0478,
-        "six_month": 0.6094,
+        "one_month": 3.4264,
+        "six_month": -0.9958,
         "ytd": 15.8652,
-        "one_year": 9.5168
+        "one_year": 12.5684
       },
       {
         "ticker": "MU",
         "day": -1.5851,
         "five_day": 15.7159,
-        "one_month": -19.2585,
-        "six_month": 4.1885,
+        "one_month": -16.2218,
+        "six_month": -0.6149,
         "ytd": 179.9566,
-        "one_year": 226.3972
+        "one_year": 237.3483
       },
       {
         "ticker": "SPCX",
         "day": 0.136,
         "five_day": 4.2228,
-        "one_month": -14.3679,
+        "one_month": -10.6043,
         "six_month": null,
         "ytd": null,
         "one_year": null
@@ -437,100 +437,100 @@
         "ticker": "NVDA",
         "day": -4.3401,
         "five_day": -10.9569,
-        "one_month": -26.5686,
-        "six_month": -24.5539,
+        "one_month": -27.2755,
+        "six_month": -26.241,
         "ytd": -10.6816,
-        "one_year": -14.0412
+        "one_year": -10.8487
       },
       {
         "ticker": "PSA",
         "day": -0.7149,
         "five_day": -1.2238,
-        "one_month": 15.387,
-        "six_month": 9.1873,
+        "one_month": 15.5831,
+        "six_month": 11.9125,
         "ytd": 32.3075,
-        "one_year": 26.1585
+        "one_year": 26.5587
       },
       {
         "ticker": "TSLA",
         "day": 1.6912,
         "five_day": 10.9514,
-        "one_month": 5.1372,
-        "six_month": -8.3055,
+        "one_month": 5.9217,
+        "six_month": -10.7396,
         "ytd": -11.6228,
-        "one_year": -7.6986
+        "one_year": -1.1294
       },
       {
         "ticker": "PYPL",
         "day": -1.9839,
         "five_day": -1.5868,
-        "one_month": 4.0143,
-        "six_month": 29.042,
+        "one_month": 3.7921,
+        "six_month": 29.6411,
         "ytd": 0.7437,
-        "one_year": -12.2766
+        "one_year": -9.7656
       },
       {
         "ticker": "COIN",
         "day": -4.1095,
         "five_day": -3.035,
-        "one_month": -27.5625,
-        "six_month": -37.069,
+        "one_month": -28.1204,
+        "six_month": -35.2478,
         "ytd": -42.2172,
-        "one_year": -57.0164
+        "one_year": -53.8497
       },
       {
         "ticker": "BRK.B",
         "day": 0.2703,
         "five_day": 3.3176,
-        "one_month": 13.9548,
-        "six_month": 21.6245,
+        "one_month": 13.3003,
+        "six_month": 21.4842,
         "ytd": 17.3441,
-        "one_year": 17.4025
+        "one_year": 14.952
       },
       {
         "ticker": "META",
         "day": -0.8206,
         "five_day": 2.206,
-        "one_month": -16.0641,
-        "six_month": 3.5954,
+        "one_month": -18.2151,
+        "six_month": 1.3056,
         "ytd": -5.2833,
-        "one_year": 2.7447
+        "one_year": 2.5964
       },
       {
         "ticker": "AVGO",
         "day": 5.5443,
         "five_day": 24.0628,
-        "one_month": 2.7147,
-        "six_month": -12.8068,
+        "one_month": 1.9731,
+        "six_month": -12.2817,
         "ytd": 5.8561,
-        "one_year": 3.3357
+        "one_year": 7.9679
       },
       {
         "ticker": "MSFT",
         "day": 0.3598,
         "five_day": -1.4342,
-        "one_month": -3.354,
-        "six_month": 28.7783,
+        "one_month": -3.763,
+        "six_month": 29.5919,
         "ytd": 8.8288,
-        "one_year": 3.1622
+        "one_year": 4.7712
       },
       {
         "ticker": "GOOGL",
         "day": 1.7891,
         "five_day": 4.888,
-        "one_month": -15.3153,
-        "six_month": -22.7906,
+        "one_month": -15.569,
+        "six_month": -25.7189,
         "ytd": -4.383,
-        "one_year": 4.4529
+        "one_year": 7.5051
       },
       {
         "ticker": "AAPL",
         "day": -0.2109,
-        "five_day": 3.6539,
-        "one_month": 4.0795,
-        "six_month": 20.4837,
-        "ytd": 30.8931,
-        "one_year": 30.1225
+        "five_day": 3.7327,
+        "one_month": 4.0671,
+        "six_month": 18.9333,
+        "ytd": 30.9926,
+        "one_year": 30.4694
       }
     ],
     "precious": [
@@ -538,28 +538,28 @@
         "ticker": "Silver",
         "day": -3.2797,
         "five_day": -3.7337,
-        "one_month": -16.9825,
-        "six_month": -42.5589,
+        "one_month": -15.6478,
+        "six_month": -43.138,
         "ytd": -29.9596,
-        "one_year": -6.6225
+        "one_year": -4.8503
       },
       {
         "ticker": "Gold",
         "day": -2.8151,
         "five_day": -4.7326,
-        "one_month": -7.1333,
-        "six_month": -18.026,
+        "one_month": -7.0165,
+        "six_month": -17.5633,
         "ytd": -10.4514,
-        "one_year": -8.0572
+        "one_year": -7.308
       },
       {
         "ticker": "CPER",
         "day": -1.2987,
         "five_day": -1.1415,
-        "one_month": -8.3436,
-        "six_month": -7.913,
+        "one_month": -7.9357,
+        "six_month": -7.5242,
         "ytd": 6.5217,
-        "one_year": 18.2222
+        "one_year": 19.1299
       }
     ]
   }
